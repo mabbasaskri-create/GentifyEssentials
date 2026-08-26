@@ -441,6 +441,15 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
   letter-spacing:.04em; font-weight:600; transition:color .2s;
 }
 .admin-firebase-link:hover{ color:var(--navy); }
+.admin-sync-btn{
+  display:inline-flex; align-items:center; gap:6px; margin-top:6px;
+  padding:8px 18px; border:2px solid var(--gold); border-radius:var(--radius);
+  background:var(--gold); color:var(--navy); font-size:12px; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; cursor:pointer;
+  transition:all .25s ease; font-family:var(--ff-body);
+}
+.admin-sync-btn:hover{ background:var(--navy); color:var(--gold); border-color:var(--navy); }
+.admin-sync-btn:disabled{ opacity:.5; cursor:not-allowed; }
 .admin-title{ font-size:clamp(28px,3.4vw,38px); }
 .admin-email{ font-size:13px; color:#7c8797; }
 

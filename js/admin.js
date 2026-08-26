@@ -154,6 +154,47 @@ function loadAllData() {
   });
 }
 
+function syncToFirebase() {
+  var btn = document.getElementById("syncFirebaseBtn");
+  if (!btn) return;
+  btn.disabled = true;
+  btn.textContent = "⟳ Syncing...";
+
+  var batch = db.batch();
+  var productsRef = db.collection("products");
+
+  PRODUCTS.forEach(function (p) {
+    var docData = {
+      name: p.name,
+      category: p.category,
+      price: p.price,
+      oldPrice: p.oldPrice || null,
+      badge: p.badge || null,
+      rating: p.rating || 0,
+      reviews: p.reviews || 0,
+      image: p.image || "",
+      desc: p.desc || "",
+      tags: p.tags || [],
+      sizes: p.sizes || null
+    };
+    batch.set(productsRef.doc(p.id), docData);
+  });
+
+  batch.commit().then(function () {
+    btn.textContent = "✓ SYNCED";
+    showToast("All " + PRODUCTS.length + " products synced to Firebase");
+    loadAllData();
+    setTimeout(function () {
+      btn.textContent = "⟳ SYNC TO FIREBASE";
+      btn.disabled = false;
+    }, 3000);
+  }).catch(function (e) {
+    btn.textContent = "⟳ SYNC TO FIREBASE";
+    btn.disabled = false;
+    showToast("Sync error: " + e.message);
+  });
+}
+
 function showToast(text) {
   var t = document.getElementById("toast");
   if (!t) return;
@@ -173,4 +214,5 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("adminCategoryFilter").addEventListener("change", function () {
     renderAdminTable(this.value);
   });
+  document.getElementById("syncFirebaseBtn").addEventListener("click", syncToFirebase);
 });
