@@ -229,4 +229,17 @@ function loadCollectionImages() {
       if (el && map[id]) el.src = map[id];
     });
   });
+  fsLoadProducts(function (products) {
+    var counts = {};
+    products.forEach(function (p) {
+      counts[p.category] = (counts[p.category] || 0) + 1;
+    });
+    ids.forEach(function (id) {
+      var el = document.getElementById("colCount" + id.charAt(0).toUpperCase() + id.slice(1));
+      if (el) {
+        var n = counts[id] || 0;
+        el.textContent = n + (id === "perfumes" ? " Scents" : " Styles");
+      }
+    });
+  });
 }
