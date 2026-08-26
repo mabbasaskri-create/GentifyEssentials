@@ -190,14 +190,13 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadCategoryHero() {
   if (typeof fsLoadCollections === "undefined") return;
   var heroEl = document.getElementById("pageHero");
-  var bgEl = document.getElementById("pageHeroBg");
-  if (!heroEl || !bgEl) return;
+  if (!heroEl) return;
   var cat = heroEl.getAttribute("data-category");
   if (!cat) return;
   fsLoadCollections(function (cols) {
     var match = cols.find(function (c) { return c.id === cat; });
     if (match && match.image) {
-      bgEl.style.backgroundImage = "url(" + match.image + ")";
+      heroEl.style.backgroundImage = "url(" + match.image + ")";
       heroEl.classList.add("has-bg");
     }
   });

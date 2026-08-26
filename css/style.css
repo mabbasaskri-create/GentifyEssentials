@@ -218,15 +218,14 @@ header.site-header{
 
 /* ---------- Page header (category/about/returns) ---------- */
 .page-hero{
-  position:relative; background:var(--navy); color:var(--ivory);
+  position:relative; color:var(--ivory);
   padding:100px 0 80px; text-align:center; overflow:hidden; min-height:600px;
   display:flex; align-items:center; justify-content:center;
+  background:var(--navy);
 }
-.page-hero-bg{
-  position:absolute; inset:0; background-size:cover; background-repeat:no-repeat; background-position:center;
-  opacity:0; transition:opacity .5s ease;
+.page-hero.has-bg{
+  background-size:cover; background-position:center; background-repeat:no-repeat;
 }
-.page-hero.has-bg .page-hero-bg{ opacity:1; }
 .page-hero.has-bg::before{
   content:""; position:absolute; inset:0;
   background:rgba(11,31,58,0.4); pointer-events:none; z-index:1;
