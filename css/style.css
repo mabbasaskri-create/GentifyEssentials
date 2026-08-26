@@ -218,10 +218,29 @@ header.site-header{
 
 /* ---------- Page header (category/about/returns) ---------- */
 .page-hero{
-  background:var(--navy); color:var(--ivory); padding:76px 0 60px; text-align:center;
+  position:relative; background:var(--navy); color:var(--ivory);
+  padding:100px 0 80px; text-align:center; overflow:hidden; min-height:340px;
+  display:flex; align-items:center; justify-content:center;
 }
-.page-hero .eyebrow{ justify-content:center; color:var(--gold-soft); }
-.page-hero .eyebrow::before{ background:var(--gold-soft); }
+.page-hero-bg{
+  position:absolute; inset:0; background-size:cover; background-position:center;
+  opacity:0; transition:opacity .5s ease;
+}
+.page-hero.has-bg .page-hero-bg{ opacity:1; }
+.page-hero.has-bg::before{
+  content:""; position:absolute; inset:0;
+  background:rgba(11,31,58,0.55); pointer-events:none; z-index:1;
+}
+.page-hero::before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(circle at 50% 50%, rgba(184,146,63,0.12), transparent 70%);
+  pointer-events:none; z-index:0;
+}
+.page-hero .wrap{ position:relative; z-index:2; }
+.page-hero h1{
+  color:var(--ivory); font-size:clamp(56px,8vw,90px); font-weight:700;
+  letter-spacing:.04em; text-transform:uppercase; margin:0;
+}
 .page-hero h1{ color:var(--ivory); margin-top:14px; font-size:clamp(32px,4.4vw,50px); }
 .page-hero p{ margin-top:14px; color:rgba(246,242,233,0.72); max-width:520px; margin-left:auto; margin-right:auto; }
 .breadcrumb{ margin-top:22px; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:rgba(246,242,233,0.5); }
