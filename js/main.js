@@ -187,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function loadCollectionImages() {
   if (typeof fsLoadCollections === "undefined") return;
-  var ids = ["caps", "watches", "perfumes", "tshirts"];
+  var ids = ["caps", "watches", "perfumes", "tshirts", "wallets"];
   fsLoadCollections(function (cols) {
     var map = {};
     cols.forEach(function (c) { map[c.id] = c.image; });
