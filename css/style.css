@@ -180,7 +180,7 @@ header.site-header{
 /* ---------- Hero ---------- */
 .hero{
   position:relative; background:var(--navy); color:var(--ivory);
-  padding:120px 0 100px; overflow:hidden;
+  padding:160px 0 140px; overflow:hidden;
 }
 .hero-bg{
   position:absolute; inset:0; background-size:cover; background-position:center;
@@ -219,7 +219,7 @@ header.site-header{
 /* ---------- Page header (category/about/returns) ---------- */
 .page-hero{
   position:relative; background:var(--navy); color:var(--ivory);
-  padding:100px 0 80px; text-align:center; overflow:hidden;   min-height:480px;
+  padding:100px 0 80px; text-align:center; overflow:hidden;   min-height:600px;
   display:flex; align-items:center; justify-content:center;
 }
 .page-hero-bg{
