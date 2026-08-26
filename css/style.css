@@ -219,11 +219,11 @@ header.site-header{
 /* ---------- Page header (category/about/returns) ---------- */
 .page-hero{
   position:relative; background:var(--navy); color:var(--ivory);
-  padding:100px 0 80px; text-align:center; overflow:hidden; min-height:340px;
+  padding:100px 0 80px; text-align:center; overflow:hidden;   min-height:480px;
   display:flex; align-items:center; justify-content:center;
 }
 .page-hero-bg{
-  position:absolute; inset:0; background-size:cover; background-position:center;
+  position:absolute; inset:0; background-size:cover; background-position:center top;
   opacity:0; transition:opacity .5s ease;
 }
 .page-hero.has-bg .page-hero-bg{ opacity:1; }
