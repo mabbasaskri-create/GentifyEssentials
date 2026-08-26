@@ -295,7 +295,7 @@ function handleCollectionImage(e) {
 
   var reader = new FileReader();
   reader.onload = function (ev) {
-    compressImage(ev.target.result, 500, 0.75, function (compressed) {
+    compressImage(ev.target.result, 800, 0.9, function (compressed) {
       var data = { id: cat, image: compressed };
       fsSaveCollection(data).then(function () {
         var el = document.getElementById("colImg" + cat.charAt(0).toUpperCase() + cat.slice(1));
