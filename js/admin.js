@@ -232,13 +232,24 @@ function loadAllData() {
 function syncToFirebase() {
   var btn = document.getElementById("syncFirebaseBtn");
   if (!btn) return;
+
+  var existingIds = allProducts.map(function (p) { return p.id; });
+  var newProducts = PRODUCTS.filter(function (p) { return existingIds.indexOf(p.id) === -1; });
+
+  if (newProducts.length === 0) {
+    showToast("All products already in Firebase. Nothing to sync.");
+    return;
+  }
+
+  if (!confirm("Add " + newProducts.length + " new products to Firebase?\n(Existing products with your edits will NOT be overwritten)")) return;
+
   btn.disabled = true;
   btn.textContent = "⟳ Syncing...";
 
   var batch = db.batch();
   var productsRef = db.collection("products");
 
-  PRODUCTS.forEach(function (p) {
+  newProducts.forEach(function (p) {
     var docData = {
       name: p.name,
       category: p.category,
@@ -258,7 +269,7 @@ function syncToFirebase() {
 
   batch.commit().then(function () {
     btn.textContent = "✓ SYNCED";
-    showToast("All " + PRODUCTS.length + " products synced to Firebase");
+    showToast(newProducts.length + " new products synced to Firebase");
     loadAllData();
     setTimeout(function () { btn.textContent = "⟳ SYNC TO FIREBASE"; btn.disabled = false; }, 3000);
   }).catch(function (e) {
