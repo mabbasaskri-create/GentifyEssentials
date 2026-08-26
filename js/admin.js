@@ -233,49 +233,59 @@ function syncToFirebase() {
   var btn = document.getElementById("syncFirebaseBtn");
   if (!btn) return;
 
-  var existingIds = allProducts.map(function (p) { return p.id; });
-  var newProducts = PRODUCTS.filter(function (p) { return existingIds.indexOf(p.id) === -1; });
-
-  if (newProducts.length === 0) {
-    showToast("All products already in Firebase. Nothing to sync.");
-    return;
-  }
-
-  if (!confirm("Add " + newProducts.length + " new products to Firebase?\n(Existing products with your edits will NOT be overwritten)")) return;
-
   btn.disabled = true;
-  btn.textContent = "⟳ Syncing...";
+  btn.textContent = "⟳ Checking Firebase...";
 
-  var batch = db.batch();
-  var productsRef = db.collection("products");
+  fsLoadProducts(function (firestoreProducts) {
+    var existingIds = firestoreProducts.map(function (p) { return p.id; });
+    var newProducts = PRODUCTS.filter(function (p) { return existingIds.indexOf(p.id) === -1; });
 
-  newProducts.forEach(function (p) {
-    var docData = {
-      name: p.name,
-      category: p.category,
-      price: p.price,
-      oldPrice: p.oldPrice || null,
-      badge: p.badge || null,
-      rating: p.rating || 0,
-      reviews: p.reviews || 0,
-      image: p.image || "",
-      images: p.images || (p.image ? [p.image] : []),
-      desc: p.desc || "",
-      tags: p.tags || [],
-      sizes: p.sizes || null
-    };
-    batch.set(productsRef.doc(p.id), docData);
-  });
+    if (newProducts.length === 0) {
+      showToast("All products already in Firebase. Nothing to sync.");
+      btn.disabled = false;
+      btn.textContent = "⟳ SYNC TO FIREBASE";
+      return;
+    }
 
-  batch.commit().then(function () {
-    btn.textContent = "✓ SYNCED";
-    showToast(newProducts.length + " new products synced to Firebase");
-    loadAllData();
-    setTimeout(function () { btn.textContent = "⟳ SYNC TO FIREBASE"; btn.disabled = false; }, 3000);
-  }).catch(function (e) {
-    btn.textContent = "⟳ SYNC TO FIREBASE";
-    btn.disabled = false;
-    showToast("Sync error: " + e.message);
+    if (!confirm("Add " + newProducts.length + " new products to Firebase?\n(Existing products will NOT be touched)")) {
+      btn.disabled = false;
+      btn.textContent = "⟳ SYNC TO FIREBASE";
+      return;
+    }
+
+    btn.textContent = "⟳ Syncing " + newProducts.length + "...";
+
+    var batch = db.batch();
+    var productsRef = db.collection("products");
+
+    newProducts.forEach(function (p) {
+      var docData = {
+        name: p.name,
+        category: p.category,
+        price: p.price,
+        oldPrice: p.oldPrice || null,
+        badge: p.badge || null,
+        rating: p.rating || 0,
+        reviews: p.reviews || 0,
+        image: p.image || "",
+        images: p.images || (p.image ? [p.image] : []),
+        desc: p.desc || "",
+        tags: p.tags || [],
+        sizes: p.sizes || null
+      };
+      batch.set(productsRef.doc(p.id), docData);
+    });
+
+    batch.commit().then(function () {
+      btn.textContent = "✓ SYNCED";
+      showToast(newProducts.length + " new products synced to Firebase");
+      loadAllData();
+      setTimeout(function () { btn.textContent = "⟳ SYNC TO FIREBASE"; btn.disabled = false; }, 3000);
+    }).catch(function (e) {
+      btn.textContent = "⟳ SYNC TO FIREBASE";
+      btn.disabled = false;
+      showToast("Sync error: " + e.message);
+    });
   });
 }
 
