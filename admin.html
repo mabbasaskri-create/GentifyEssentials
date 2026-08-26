@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Gentify Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+
+<div class="announce">Admin Panel — Gentify Essentials</div>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a href="index.html" class="logo">GENTIFY<span class="dot">.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Back to Store</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="google-auth" id="googleAuth">
+        <div class="google-auth-signedin" id="googleUserInfo" style="display:flex;">
+          <div class="google-user-menu">
+            <button class="google-user-avatar" id="googleAvatarBtn" type="button">
+              <span class="google-user-letter" id="googleUserLetter"></span>
+            </button>
+            <div class="google-user-dropdown" id="googleUserDropdown">
+              <div class="google-dropdown-name" id="googleDropdownName"></div>
+              <button class="google-dropdown-signout" id="googleSignOutBtn" type="button">Sign out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="admin-guard" id="adminGuard">
+  <div class="wrap">
+    <div class="admin-access-denied">
+      <div class="admin-denied-icon">🔒</div>
+      <h2>Access Denied</h2>
+      <p>Only the store owner can access this panel.</p>
+      <a href="index.html" class="btn btn-primary" style="margin-top:20px;">Back to Store</a>
+    </div>
+  </div>
+</section>
+
+<section class="admin-panel" id="adminPanel" style="display:none;">
+  <div class="wrap">
+
+    <div class="admin-top">
+      <h1 class="admin-title">Dashboard</h1>
+      <span class="admin-email" id="adminEmail"></span>
+    </div>
+
+    <div class="admin-stats">
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" id="statProducts">0</div>
+        <div class="admin-stat-label">Total Products</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" id="statCategories">0</div>
+        <div class="admin-stat-label">Categories</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" id="statValue">Rs. 0</div>
+        <div class="admin-stat-label">Total Inventory Value</div>
+      </div>
+      <div class="admin-stat-card">
+        <div class="admin-stat-num" id="statOrders">0</div>
+        <div class="admin-stat-label">Cart Orders</div>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-head">
+        <h2>Products</h2>
+        <button class="btn btn-gold btn-sm" id="addProductBtn">+ Add Product</button>
+      </div>
+
+      <div class="admin-filters">
+        <select class="sort-select" id="adminCategoryFilter">
+          <option value="all">All Categories</option>
+          <option value="caps">Caps</option>
+          <option value="watches">Watches</option>
+          <option value="perfumes">Perfumes</option>
+          <option value="tshirts">T-Shirts</option>
+          <option value="wallets">Wallets</option>
+        </select>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="adminProductTable">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Old Price</th>
+              <th>Badge</th>
+              <th>Rating</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminProductBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-head">
+        <h2>Recent Cart Orders</h2>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table" id="adminOrdersTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="adminOrdersBody"></tbody>
+        </table>
+        <div class="admin-empty" id="ordersEmpty">No orders yet.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Add/Edit Product Modal -->
+<div class="modal" id="productModal">
+  <div class="modal-card" style="max-width:600px;">
+    <button class="modal-close" id="productModalClose">&times;</button>
+    <div class="modal-info" style="padding:36px;">
+      <h2 id="productModalTitle">Add Product</h2>
+      <form id="productForm" style="display:flex;flex-direction:column;gap:16px;margin-top:20px;">
+        <input type="hidden" id="pfId">
+        <div class="pf-row">
+          <label>Name</label>
+          <input type="text" id="pfName" required>
+        </div>
+        <div class="pf-row">
+          <label>Category</label>
+          <select id="pfCategory" required>
+            <option value="caps">Caps</option>
+            <option value="watches">Watches</option>
+            <option value="perfumes">Perfumes</option>
+            <option value="tshirts">T-Shirts</option>
+            <option value="wallets">Wallets</option>
+          </select>
+        </div>
+        <div class="pf-row pf-row-split">
+          <div>
+            <label>Price (PKR)</label>
+            <input type="number" id="pfPrice" required min="0">
+          </div>
+          <div>
+            <label>Old Price (PKR)</label>
+            <input type="number" id="pfOldPrice" min="0">
+          </div>
+        </div>
+        <div class="pf-row pf-row-split">
+          <div>
+            <label>Badge</label>
+            <select id="pfBadge">
+              <option value="">None</option>
+              <option value="Sale">Sale</option>
+              <option value="New">New</option>
+              <option value="Bestseller">Bestseller</option>
+            </select>
+          </div>
+          <div>
+            <label>Rating</label>
+            <input type="number" id="pfRating" min="1" max="5" step="0.1" value="4.5">
+          </div>
+        </div>
+        <div class="pf-row">
+          <label>Image URL</label>
+          <input type="url" id="pfImage" placeholder="https://...">
+        </div>
+        <div class="pf-row">
+          <label>Description</label>
+          <textarea id="pfDesc" rows="3"></textarea>
+        </div>
+        <div class="pf-row">
+          <label>Tags (comma separated)</label>
+          <input type="text" id="pfTags" placeholder="Bestseller, Sale">
+        </div>
+        <div class="pf-actions">
+          <button type="button" class="btn btn-outline btn-sm" id="productFormCancel">Cancel</button>
+          <button type="submit" class="btn btn-gold btn-sm">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/products.js"></script>
+<script src="js/admin.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyDGUg1O9WzIyM0ZvUq7b-vzsVVulidRrjo",
+    authDomain: "gentifyessentials.firebaseapp.com",
+    projectId: "gentifyessentials",
+    storageBucket: "gentifyessentials.firebasestorage.app",
+    messagingSenderId: "1007484414760",
+    appId: "1:1007484414760:web:5c03d0a109452f6eeefe1d"
+  });
+</script>
+<script src="js/admin-auth.js"></script>
+</body>
+</html>

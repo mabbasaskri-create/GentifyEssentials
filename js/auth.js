@@ -2,7 +2,9 @@
    GENTIFY ESSENTIALS — Firebase Google Sign-In
    ========================================================================== */
 
-const firebaseConfig = {
+var ADMIN_EMAIL = "m.abbas.askri@gmail.com";
+
+var firebaseConfig = {
   apiKey: "AIzaSyDGUg1O9WzIyM0ZvUq7b-vzsVVulidRrjo",
   authDomain: "gentifyessentials.firebaseapp.com",
   projectId: "gentifyessentials",
@@ -13,14 +15,15 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
+var auth = firebase.auth();
+var provider = new firebase.auth.GoogleAuthProvider();
 
 function initGoogleAuth() {
   var signInBtn = document.getElementById("googleSignInBtn");
   var signOutBtn = document.getElementById("googleSignOutBtn");
   var avatarBtn = document.getElementById("googleAvatarBtn");
   var dropdown = document.getElementById("googleUserDropdown");
+  var adminLink = document.getElementById("googleAdminLink");
 
   if (signInBtn) {
     signInBtn.addEventListener("click", function () {
@@ -49,6 +52,12 @@ function initGoogleAuth() {
     });
   }
 
+  if (adminLink) {
+    adminLink.addEventListener("click", function () {
+      window.location.href = "admin.html";
+    });
+  }
+
   auth.onAuthStateChanged(function (user) {
     if (user) {
       showSignedInUser(user);
@@ -63,6 +72,7 @@ function showSignedInUser(user) {
   var signedIn = document.getElementById("googleUserInfo");
   var letter = document.getElementById("googleUserLetter");
   var dropdownName = document.getElementById("googleDropdownName");
+  var adminLink = document.getElementById("googleAdminLink");
 
   if (signedOut) signedOut.style.display = "none";
   if (signedIn) signedIn.style.display = "flex";
@@ -72,6 +82,14 @@ function showSignedInUser(user) {
 
   if (letter) letter.textContent = firstLetter;
   if (dropdownName) dropdownName.textContent = name;
+
+  if (adminLink) {
+    if (user.email === ADMIN_EMAIL) {
+      adminLink.classList.add("show");
+    } else {
+      adminLink.classList.remove("show");
+    }
+  }
 }
 
 function showSignedOut() {
