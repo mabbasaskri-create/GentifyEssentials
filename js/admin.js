@@ -233,6 +233,46 @@ function loadAllData() {
       renderAdminStats(products, orders);
     });
   });
+  loadCollections();
+}
+
+function loadCollections() {
+  var defaults = {
+    caps:     "https://placehold.co/500x650/0B1F3A/D8BD84?font=playfair-display&text=Caps",
+    watches:  "https://placehold.co/500x650/232323/F6F2E9?font=playfair-display&text=Watches",
+    perfumes: "https://placehold.co/500x650/16294A/B8923F?font=playfair-display&text=Perfumes",
+    tshirts:  "https://placehold.co/500x650/2B2B2B/F6F2E9?font=playfair-display&text=T-Shirts"
+  };
+  fsLoadCollections(function (cols) {
+    cols.forEach(function (c) {
+      var imgEl = document.getElementById("colImg" + c.id.charAt(0).toUpperCase() + c.id.slice(1));
+      if (imgEl && c.image) {
+        imgEl.innerHTML = '<img src="' + c.image + '">';
+      }
+    });
+  });
+}
+
+function handleCollectionImage(e) {
+  var cat = this.getAttribute("data-col");
+  var file = e.target.files[0];
+  if (!file) return;
+
+  var reader = new FileReader();
+  reader.onload = function (ev) {
+    compressImage(ev.target.result, 500, 0.75, function (compressed) {
+      var data = { id: cat, image: compressed };
+      fsSaveCollection(data).then(function () {
+        var el = document.getElementById("colImg" + cat.charAt(0).toUpperCase() + cat.slice(1));
+        if (el) el.innerHTML = '<img src="' + compressed + '">';
+        showToast(cat.charAt(0).toUpperCase() + cat.slice(1) + " collection image saved");
+      }).catch(function (err) {
+        showToast("Error: " + err.message);
+      });
+    });
+  };
+  reader.readAsDataURL(file);
+  e.target.value = "";
 }
 
 function syncToFirebase() {
@@ -350,5 +390,9 @@ document.addEventListener("DOMContentLoaded", function () {
     setImageSlot(slot, url);
     document.getElementById("pfImageUrl").value = "";
     showToast("Image added");
+  });
+
+  document.querySelectorAll(".col-file-input").forEach(function (input) {
+    input.addEventListener("change", handleCollectionImage);
   });
 });

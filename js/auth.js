@@ -141,4 +141,20 @@ function fsLoadOrders(callback) {
   });
 }
 
+function fsLoadCollections(callback) {
+  db.collection("collections").get().then(function (snap) {
+    var list = [];
+    snap.forEach(function (doc) {
+      list.push(Object.assign({ id: doc.id }, doc.data()));
+    });
+    callback(list);
+  }).catch(function () {
+    callback([]);
+  });
+}
+
+function fsSaveCollection(data) {
+  return db.collection("collections").doc(data.id).set(data);
+}
+
 document.addEventListener("DOMContentLoaded", initGoogleAuth);

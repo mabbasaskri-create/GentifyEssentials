@@ -539,3 +539,14 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
   .admin-stats{ grid-template-columns:1fr; }
   .pf-images-grid{ grid-template-columns:repeat(2,1fr); }
 }
+
+/* ---- Admin Collection Management ---- */
+.admin-collections-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.admin-collection-card{ background:var(--ivory); border:1px solid var(--line); border-radius:4px; overflow:hidden; }
+.admin-collection-img{ width:100%; aspect-ratio:3/4; background:var(--navy); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.admin-collection-img img{ width:100%; height:100%; object-fit:cover; }
+.admin-collection-img span{ color:var(--gold-soft); font-size:18px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
+.admin-collection-info{ padding:12px; text-align:center; }
+.admin-collection-info strong{ font-size:14px; display:block; }
+@media (max-width:780px){ .admin-collections-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:480px){ .admin-collections-grid{ grid-template-columns:1fr; } }

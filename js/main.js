@@ -182,4 +182,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   initAccordion();
+  loadCollectionImages();
 });
+
+function loadCollectionImages() {
+  if (typeof fsLoadCollections === "undefined") return;
+  var ids = ["caps", "watches", "perfumes", "tshirts"];
+  fsLoadCollections(function (cols) {
+    var map = {};
+    cols.forEach(function (c) { map[c.id] = c.image; });
+    ids.forEach(function (id) {
+      var el = document.getElementById("colImg" + id.charAt(0).toUpperCase() + id.slice(1));
+      if (el && map[id]) el.src = map[id];
+    });
+  });
+}

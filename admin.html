@@ -118,8 +118,62 @@
 
     <div class="admin-section">
       <div class="admin-section-head">
-        <h2>Recent Cart Orders</h2>
+        <h2>Shop by Collection — Homepage Images</h2>
       </div>
+      <p style="color:#7c8797;margin-bottom:20px;">Change the images shown on the homepage "Shop by Collection" section.</p>
+      <div class="admin-collections-grid" id="adminCollectionsGrid">
+        <div class="admin-collection-card" data-cat="caps">
+          <div class="admin-collection-img" id="colImgCaps">
+            <span>Caps</span>
+          </div>
+          <div class="admin-collection-info">
+            <strong>Caps</strong>
+            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
+              📁 Change Image
+              <input type="file" accept="image/*" data-col="caps" class="col-file-input" style="display:none;">
+            </label>
+          </div>
+        </div>
+        <div class="admin-collection-card" data-cat="watches">
+          <div class="admin-collection-img" id="colImgWatches">
+            <span>Watches</span>
+          </div>
+          <div class="admin-collection-info">
+            <strong>Watches</strong>
+            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
+              📁 Change Image
+              <input type="file" accept="image/*" data-col="watches" class="col-file-input" style="display:none;">
+            </label>
+          </div>
+        </div>
+        <div class="admin-collection-card" data-cat="perfumes">
+          <div class="admin-collection-img" id="colImgPerfumes">
+            <span>Perfumes</span>
+          </div>
+          <div class="admin-collection-info">
+            <strong>Perfumes</strong>
+            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
+              📁 Change Image
+              <input type="file" accept="image/*" data-col="perfumes" class="col-file-input" style="display:none;">
+            </label>
+          </div>
+        </div>
+        <div class="admin-collection-card" data-cat="tshirts">
+          <div class="admin-collection-img" id="colImgTshirts">
+            <span>T-Shirts</span>
+          </div>
+          <div class="admin-collection-info">
+            <strong>T-Shirts</strong>
+            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
+              📁 Change Image
+              <input type="file" accept="image/*" data-col="tshirts" class="col-file-input" style="display:none;">
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-section">
       <div class="admin-table-wrap">
         <table class="admin-table" id="adminOrdersTable">
           <thead>
