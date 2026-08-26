@@ -1,54 +1,46 @@
 /* ==========================================================================
-   GENTIFY ESSENTIALS — Google Sign-In (client-side)
+   GENTIFY ESSENTIALS — Firebase Google Sign-In
    ========================================================================== */
 
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+const firebaseConfig = {
+  apiKey: "AIzaSyDGUg1O9WzIyM0ZvUq7b-vzsVVulidRrjo",
+  authDomain: "gentifyessentials.firebaseapp.com",
+  projectId: "gentifyessentials",
+  storageBucket: "gentifyessentials.firebasestorage.app",
+  messagingSenderId: "1007484414760",
+  appId: "1:1007484414760:web:5c03d0a109452f6eeefe1d",
+  measurementId: "G-H5ZLDK3PTS"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
 
 function initGoogleAuth() {
-  if (typeof google === "undefined" || !google.accounts) {
-    setTimeout(initGoogleAuth, 200);
-    return;
-  }
-
-  google.accounts.id.initialize({
-    client_id: GOOGLE_CLIENT_ID,
-    callback: handleGoogleSignIn,
-  });
-
   const signInBtn = document.getElementById("googleSignInBtn");
+  const signOutBtn = document.getElementById("googleSignOutBtn");
+
   if (signInBtn) {
     signInBtn.addEventListener("click", function () {
-      google.accounts.id.prompt();
+      auth.signInWithPopup(provider).catch(function (error) {
+        console.error("Google sign-in error:", error);
+      });
     });
   }
 
-  const signOutBtn = document.getElementById("googleSignOutBtn");
   if (signOutBtn) {
-    signOutBtn.addEventListener("click", handleGoogleSignOut);
+    signOutBtn.addEventListener("click", function () {
+      auth.signOut();
+    });
   }
 
-  const saved = localStorage.getItem("gentify_user");
-  if (saved) {
-    try {
-      showSignedInUser(JSON.parse(saved));
-    } catch (e) {
-      localStorage.removeItem("gentify_user");
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      showSignedInUser(user);
+    } else {
+      showSignedOut();
     }
-  }
-}
-
-function handleGoogleSignIn(response) {
-  const payload = parseJwt(response.credential);
-  if (!payload) return;
-
-  const user = {
-    name: payload.name,
-    email: payload.email,
-    picture: payload.picture,
-  };
-
-  localStorage.setItem("gentify_user", JSON.stringify(user));
-  showSignedInUser(user);
+  });
 }
 
 function showSignedInUser(user) {
@@ -59,40 +51,16 @@ function showSignedInUser(user) {
 
   if (signedOut) signedOut.style.display = "none";
   if (signedIn) signedIn.style.display = "flex";
-  if (avatar) avatar.src = user.picture || "";
-  if (name) name.textContent = user.name || user.email || "";
+  if (avatar) avatar.src = user.photoURL || "";
+  if (name) name.textContent = user.displayName || user.email || "";
 }
 
-function handleGoogleSignOut() {
-  localStorage.removeItem("gentify_user");
-
+function showSignedOut() {
   const signedOut = document.getElementById("googleSignInBtn");
   const signedIn = document.getElementById("googleUserInfo");
 
   if (signedOut) signedOut.style.display = "";
   if (signedIn) signedIn.style.display = "none";
-
-  if (typeof google !== "undefined" && google.accounts) {
-    google.accounts.id.disableAutoSelect();
-  }
-}
-
-function parseJwt(token) {
-  try {
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join("")
-    );
-    return JSON.parse(jsonPayload);
-  } catch (e) {
-    return null;
-  }
 }
 
 document.addEventListener("DOMContentLoaded", initGoogleAuth);
