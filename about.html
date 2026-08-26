@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — Gentify Essentials</title>
+<meta name="description" content="The story behind Gentify Essentials — premium caps, watches, perfumes, tees and wallets for the modern gentleman.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce">Free shipping on all orders over Rs. 5,000 — across Pakistan</div>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a href="index.html" class="logo">GENTIFY<span class="dot">.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="caps.html">Caps</a>
+      <a href="watches.html">Watches</a>
+      <a href="perfumes.html">Perfumes</a>
+      <a href="tshirts.html">T-Shirts</a>
+      <a href="wallets.html">Wallets</a>
+      <a href="about.html" class="active">About</a>
+      <a href="returns.html">Returns</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-count">0</span>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Our Story</span>
+    <h1>Built on Restraint, Not Excess</h1>
+    <p>Why Gentify exists, and what we believe a modern gentleman's essentials should look like.</p>
+    <div class="breadcrumb"><a href="index.html">Home</a> / About</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Since Day One</span>
+      <h2 style="margin-top:14px; font-size:32px;">Fewer, better things.</h2>
+      <div class="prose" style="margin-top:20px;">
+        <p>Gentify Essentials started with a simple frustration: most men's accessories are either mass-produced and forgettable, or priced for a lifestyle most of us aren't living. We wanted a middle ground — pieces built from real materials, priced fairly, and designed to be worn for years rather than one season.</p>
+        <p>Every cap, watch, fragrance, tee and wallet in our catalogue is chosen (or made) with the same question in mind: would we wear this every day, ourselves? If the answer isn't a clear yes, it doesn't make the cut.</p>
+      </div>
+      <div class="stat-row">
+        <div><strong>2021</strong><span>Founded</span></div>
+        <div><strong>35+</strong><span>Products</span></div>
+        <div><strong>4.8★</strong><span>Avg. Rating</span></div>
+        <div><strong>5</strong><span>Categories</span></div>
+      </div>
+    </div>
+    <img src="https://placehold.co/700x875/0B1F3A/D8BD84?font=playfair-display&text=Gentify%0AEssentials" alt="Gentify Essentials studio">
+  </div>
+</section>
+
+<section class="section-alt">
+  <div class="wrap">
+    <div class="section-head center">
+      <span class="eyebrow">What We Stand For</span>
+      <h2>Three Things We Don't Compromise On</h2>
+    </div>
+    <div class="testimonials">
+      <div class="t-card">
+        <div style="font-size:24px;">🧵</div>
+        <div class="t-author" style="margin-top:14px; font-size:16px;">Material First</div>
+        <p class="t-quote" style="font-style:normal; margin-top:10px;">Full-grain leather, heavyweight cotton, real metal hardware — nothing that looks premium on day one and falls apart by day thirty.</p>
+      </div>
+      <div class="t-card">
+        <div style="font-size:24px;">✋</div>
+        <div class="t-author" style="margin-top:14px; font-size:16px;">Honest Pricing</div>
+        <p class="t-quote" style="font-style:normal; margin-top:10px;">No inflated "was" prices dressed up as discounts. What you see is what the piece is actually worth.</p>
+      </div>
+      <div class="t-card">
+        <div style="font-size:24px;">📦</div>
+        <div class="t-author" style="margin-top:14px; font-size:16px;">Real Support</div>
+        <p class="t-quote" style="font-style:normal; margin-top:10px;">A message on WhatsApp reaches an actual person on our team — not a ticket queue. Every order, every return.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="wrap">
+    <span class="eyebrow">Stay in the Loop</span>
+    <h2>New drops, style guides, and exclusive discounts — straight to your inbox.</h2>
+    <p>No spam, ever. Unsubscribe anytime.</p>
+    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+      <input type="email" placeholder="Your email address" required>
+      <button type="submit" class="btn btn-gold">Subscribe</button>
+    </form>
+    <div class="newsletter-note" id="newsletterNote"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">GENTIFY<span class="dot">.</span></div>
+        <p class="footer-about">Premium caps, watches, perfumes, tees and wallets for the modern gentleman. Handpicked quality, shipped across Pakistan.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="caps.html">Caps</a></li>
+          <li><a href="watches.html">Watches</a></li>
+          <li><a href="perfumes.html">Perfumes</a></li>
+          <li><a href="tshirts.html">T-Shirts</a></li>
+          <li><a href="wallets.html">Wallets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="returns.html">Returns</a></li>
+          <li><a href="https://wa.me/923256646684" target="_blank">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="returns.html">Shipping Info</a></li>
+          <li><a href="returns.html">Returns Policy</a></li>
+          <li><a href="returns.html">Size Guide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Gentify Essentials. All rights reserved.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="cartOverlay"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="drawer-close" id="drawerClose">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<div class="modal" id="quickViewModal">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

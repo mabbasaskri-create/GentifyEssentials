@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfumes — Gentify Essentials</title>
+<meta name="description" content="Shop Perfumes at Gentify Essentials — Layered, long-lasting fragrances in 100ml Eau de Parfum and Eau de Toilette.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce">Free shipping on all orders over Rs. 5,000 — across Pakistan</div>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a href="index.html" class="logo">GENTIFY<span class="dot">.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="caps.html">Caps</a>
+      <a href="watches.html">Watches</a>
+      <a href="perfumes.html" class="active">Perfumes</a>
+      <a href="tshirts.html">T-Shirts</a>
+      <a href="wallets.html">Wallets</a>
+      <a href="about.html">About</a>
+      <a href="returns.html">Returns</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-count">0</span>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <span class="eyebrow">Fragrance</span>
+    <h1>Perfumes</h1>
+    <p>Layered, long-lasting fragrances in 100ml Eau de Parfum and Eau de Toilette.</p>
+    <div class="breadcrumb"><a href="index.html">Home</a> / Perfumes</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="filter-bar">
+      <div class="filter-group">
+        <button class="chip active" data-filter="all">All</button>
+        <button class="chip" data-filter="bestseller">Bestsellers</button>
+        <button class="chip" data-filter="new">New Arrivals</button>
+        <button class="chip" data-filter="sale">On Sale</button>
+      </div>
+      <div style="display:flex; align-items:center; gap:18px;">
+        <span class="result-count" id="resultCount"></span>
+        <select class="sort-select" id="sortSelect">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="rating">Top Rated</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-products" id="productGrid"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">GENTIFY<span class="dot">.</span></div>
+        <p class="footer-about">Premium caps, watches, perfumes, tees and wallets for the modern gentleman. Handpicked quality, shipped across Pakistan.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="caps.html">Caps</a></li>
+          <li><a href="watches.html">Watches</a></li>
+          <li><a href="perfumes.html">Perfumes</a></li>
+          <li><a href="tshirts.html">T-Shirts</a></li>
+          <li><a href="wallets.html">Wallets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="returns.html">Returns</a></li>
+          <li><a href="https://wa.me/923256646684" target="_blank">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="returns.html">Shipping Info</a></li>
+          <li><a href="returns.html">Returns Policy</a></li>
+          <li><a href="returns.html">Size Guide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Gentify Essentials. All rights reserved.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="overlay" id="cartOverlay"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="drawer-close" id="drawerClose">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<!-- Quick View Modal -->
+<div class="modal" id="quickViewModal">
+  <div class="modal-card">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script>
+  initCategoryPage("perfumes");
+</script>
+</body>
+</html>
