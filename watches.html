@@ -37,9 +37,15 @@
           </button>
         </div>
         <div class="google-auth-signedin" id="googleUserInfo" style="display:none;">
-          <img class="google-user-avatar" id="googleUserAvatar" src="" alt="avatar">
-          <span class="google-user-name" id="googleUserName"></span>
-          <button class="google-signout-btn" id="googleSignOutBtn" type="button">Sign out</button>
+          <div class="google-user-menu">
+            <button class="google-user-avatar" id="googleAvatarBtn" type="button">
+              <span class="google-user-letter" id="googleUserLetter"></span>
+            </button>
+            <div class="google-user-dropdown" id="googleUserDropdown">
+              <div class="google-dropdown-name" id="googleDropdownName"></div>
+              <button class="google-dropdown-signout" id="googleSignOutBtn" type="button">Sign out</button>
+            </div>
+          </div>
         </div>
       </div>
       <button class="icon-btn" id="cartBtn" aria-label="Open cart">

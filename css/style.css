@@ -129,28 +129,37 @@ header.site-header{
 }
 .google-signin-btn:hover{ border-color:var(--navy); background:var(--ivory-2); }
 .google-signin-btn svg{ flex-shrink:0; }
-.google-auth-signedin{
-  display:flex; align-items:center; gap:10px;
-}
+.google-auth-signedin{ display:none; align-items:center; }
+.google-user-menu{ position:relative; }
 .google-user-avatar{
-  width:32px; height:32px; border-radius:50%; object-fit:cover;
-  border:2px solid var(--line);
+  width:36px; height:36px; border-radius:50%; border:2px solid var(--gold);
+  background:var(--navy); color:var(--ivory); display:flex; align-items:center;
+  justify-content:center; cursor:pointer; transition:all .25s ease;
+  font-family:var(--ff-display); font-size:15px; font-weight:700;
 }
-.google-user-name{
-  font-size:13px; font-weight:600; color:var(--navy);
-  max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+.google-user-avatar:hover{ border-color:var(--navy); background:var(--gold); color:var(--navy); }
+.google-user-letter{ line-height:1; }
+.google-user-dropdown{
+  position:absolute; top:calc(100% + 10px); right:0; min-width:180px;
+  background:var(--white); border:1px solid var(--line); box-shadow:var(--shadow);
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:all .2s ease; z-index:70;
 }
-.google-signout-btn{
-  padding:6px 12px; border:1px solid var(--line); border-radius:var(--radius);
-  background:transparent; color:var(--navy); font-size:11px; font-weight:600;
-  letter-spacing:.06em; text-transform:uppercase; cursor:pointer;
-  transition:all .25s ease; font-family:var(--ff-body);
+.google-user-dropdown.open{ opacity:1; visibility:visible; transform:translateY(0); }
+.google-dropdown-name{
+  padding:14px 18px 10px; font-size:13px; font-weight:600; color:var(--navy);
+  border-bottom:1px solid var(--line);
 }
-.google-signout-btn:hover{ background:var(--navy); color:var(--ivory); border-color:var(--navy); }
+.google-dropdown-signout{
+  width:100%; text-align:left; padding:12px 18px; background:none; border:none;
+  font-size:13px; color:var(--navy); cursor:pointer; font-family:var(--ff-body);
+  transition:background .2s;
+}
+.google-dropdown-signout:hover{ background:var(--ivory-2); }
 
 @media (max-width: 920px){
   .google-auth{ margin-top:10px; }
-  .google-user-name{ max-width:100px; }
+  .google-user-dropdown{ right:auto; left:0; }
   .nav-links{
     position:fixed; inset:84px 0 0 0; background:var(--ivory); flex-direction:column;
     justify-content:flex-start; padding:36px 28px; gap:26px; transform:translateX(100%);

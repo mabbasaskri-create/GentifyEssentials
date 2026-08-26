@@ -17,8 +17,10 @@ const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
 
 function initGoogleAuth() {
-  const signInBtn = document.getElementById("googleSignInBtn");
-  const signOutBtn = document.getElementById("googleSignOutBtn");
+  var signInBtn = document.getElementById("googleSignInBtn");
+  var signOutBtn = document.getElementById("googleSignOutBtn");
+  var avatarBtn = document.getElementById("googleAvatarBtn");
+  var dropdown = document.getElementById("googleUserDropdown");
 
   if (signInBtn) {
     signInBtn.addEventListener("click", function () {
@@ -27,6 +29,19 @@ function initGoogleAuth() {
       });
     });
   }
+
+  if (avatarBtn) {
+    avatarBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      dropdown.classList.toggle("open");
+    });
+  }
+
+  document.addEventListener("click", function (e) {
+    if (dropdown && !dropdown.contains(e.target) && e.target !== avatarBtn) {
+      dropdown.classList.remove("open");
+    }
+  });
 
   if (signOutBtn) {
     signOutBtn.addEventListener("click", function () {
@@ -44,23 +59,29 @@ function initGoogleAuth() {
 }
 
 function showSignedInUser(user) {
-  const signedOut = document.getElementById("googleSignInBtn");
-  const signedIn = document.getElementById("googleUserInfo");
-  const avatar = document.getElementById("googleUserAvatar");
-  const name = document.getElementById("googleUserName");
+  var signedOut = document.getElementById("googleSignInBtn");
+  var signedIn = document.getElementById("googleUserInfo");
+  var letter = document.getElementById("googleUserLetter");
+  var dropdownName = document.getElementById("googleDropdownName");
 
   if (signedOut) signedOut.style.display = "none";
   if (signedIn) signedIn.style.display = "flex";
-  if (avatar) avatar.src = user.photoURL || "";
-  if (name) name.textContent = user.displayName || user.email || "";
+
+  var name = user.displayName || user.email || "";
+  var firstLetter = name.charAt(0).toUpperCase();
+
+  if (letter) letter.textContent = firstLetter;
+  if (dropdownName) dropdownName.textContent = name;
 }
 
 function showSignedOut() {
-  const signedOut = document.getElementById("googleSignInBtn");
-  const signedIn = document.getElementById("googleUserInfo");
+  var signedOut = document.getElementById("googleSignInBtn");
+  var signedIn = document.getElementById("googleUserInfo");
+  var dropdown = document.getElementById("googleUserDropdown");
 
   if (signedOut) signedOut.style.display = "";
   if (signedIn) signedIn.style.display = "none";
+  if (dropdown) dropdown.classList.remove("open");
 }
 
 document.addEventListener("DOMContentLoaded", initGoogleAuth);
