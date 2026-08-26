@@ -128,7 +128,9 @@ function editProduct(id) {
 function deleteProduct(id) {
   if (!confirm("Delete this product from Firebase?")) return;
   fsDeleteProduct(id).then(function () {
-    db.collection("deletedProducts").doc(id).set({ deletedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    var deleted = JSON.parse(localStorage.getItem("deletedProductIds") || "[]");
+    if (deleted.indexOf(id) === -1) deleted.push(id);
+    localStorage.setItem("deletedProductIds", JSON.stringify(deleted));
     showToast("Product deleted");
     loadAllData();
   }).catch(function (e) { showToast("Error: " + e.message); });
@@ -241,9 +243,7 @@ function syncToFirebase() {
   btn.textContent = "⟳ Checking Firebase...";
 
   fsLoadProducts(function (firestoreProducts) {
-    db.collection("deletedProducts").get().then(function (deletedSnap) {
-      var deletedIds = [];
-      deletedSnap.forEach(function (doc) { deletedIds.push(doc.id); });
+      var deletedIds = JSON.parse(localStorage.getItem("deletedProductIds") || "[]");
 
       var existingIds = firestoreProducts.map(function (p) { return p.id; });
       var allBlockedIds = existingIds.concat(deletedIds);
@@ -290,15 +290,10 @@ function syncToFirebase() {
         showToast(newProducts.length + " new products synced to Firebase");
         loadAllData();
         setTimeout(function () { btn.textContent = "⟳ SYNC TO FIREBASE"; btn.disabled = false; }, 3000);
-      }).catch(function (e) {
-        btn.textContent = "⟳ SYNC TO FIREBASE";
-        btn.disabled = false;
-        showToast("Sync error: " + e.message);
-      });
     }).catch(function (e) {
       btn.textContent = "⟳ SYNC TO FIREBASE";
       btn.disabled = false;
-      showToast("Error: " + e.message);
+      showToast("Sync error: " + e.message);
     });
   });
 }
