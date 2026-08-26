@@ -229,16 +229,31 @@ function loadCollectionImages() {
       if (el && map[id]) el.src = map[id];
     });
   });
-  fsLoadProducts(function (products) {
+
+  if (typeof db === "undefined") return;
+  db.collection("products").get().then(function (snap) {
     var counts = {};
-    products.forEach(function (p) {
+    snap.forEach(function (doc) {
+      var cat = doc.data().category;
+      if (cat) counts[cat] = (counts[cat] || 0) + 1;
+    });
+    ids.forEach(function (id) {
+      var el = document.getElementById("colCount" + id.charAt(0).toUpperCase() + id.slice(1));
+      if (el) {
+        var n = counts[id] || 0;
+        el.textContent = n + (n === 1 ? " Style" : (id === "perfumes" ? " Scents" : " Styles"));
+      }
+    });
+  }).catch(function () {
+    var counts = {};
+    PRODUCTS.forEach(function (p) {
       counts[p.category] = (counts[p.category] || 0) + 1;
     });
     ids.forEach(function (id) {
       var el = document.getElementById("colCount" + id.charAt(0).toUpperCase() + id.slice(1));
       if (el) {
         var n = counts[id] || 0;
-        el.textContent = n + (id === "perfumes" ? " Scents" : " Styles");
+        el.textContent = n + (n === 1 ? " Style" : (id === "perfumes" ? " Scents" : " Styles"));
       }
     });
   });
