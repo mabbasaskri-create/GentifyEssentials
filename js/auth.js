@@ -157,4 +157,15 @@ function fsSaveCollection(data) {
   return db.collection("collections").doc(data.id).set(data);
 }
 
+function fsLoadSettings(callback) {
+  db.collection("settings").doc("site").get().then(function (doc) {
+    if (doc.exists) callback(doc.data());
+    else callback({});
+  }).catch(function () { callback({}); });
+}
+
+function fsSaveSettings(data) {
+  return db.collection("settings").doc("site").set(data, { merge: true });
+}
+
 document.addEventListener("DOMContentLoaded", initGoogleAuth);

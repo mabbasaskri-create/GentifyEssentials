@@ -118,6 +118,25 @@
 
     <div class="admin-section">
       <div class="admin-section-head">
+        <h2>Hero Banner — Homepage</h2>
+      </div>
+      <p style="color:#7c8797;margin-bottom:20px;">Change the background image of the homepage hero section.</p>
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
+        <div id="heroPreview" style="width:300px;aspect-ratio:16/7;background:var(--navy);border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);">
+          <span style="color:var(--gold-soft);font-size:14px;">No image set</span>
+        </div>
+        <div style="flex:1;min-width:200px;">
+          <label class="btn btn-outline btn-sm" style="cursor:pointer;">
+            📁 Choose Hero Image
+            <input type="file" accept="image/*" id="heroImageFile" style="display:none;">
+          </label>
+          <div id="heroSaveStatus" style="margin-top:10px;font-size:13px;color:#7c8797;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-head">
         <h2>Shop by Collection — Homepage Images</h2>
       </div>
       <p style="color:#7c8797;margin-bottom:20px;">Change the images shown on the homepage "Shop by Collection" section.</p>

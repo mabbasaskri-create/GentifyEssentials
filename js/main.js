@@ -183,7 +183,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initAccordion();
   loadCollectionImages();
+  loadHeroImage();
 });
+
+function loadHeroImage() {
+  if (typeof fsLoadSettings === "undefined") return;
+  var heroBg = document.getElementById("heroBg");
+  var heroSection = document.getElementById("heroSection");
+  if (!heroBg || !heroSection) return;
+  fsLoadSettings(function (s) {
+    if (s.heroImage) {
+      heroBg.style.backgroundImage = "url(" + s.heroImage + ")";
+      heroSection.classList.add("has-bg");
+    }
+  });
+}
 
 function loadCollectionImages() {
   if (typeof fsLoadCollections === "undefined") return;

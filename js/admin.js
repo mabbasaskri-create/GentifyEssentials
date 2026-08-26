@@ -234,6 +234,40 @@ function loadAllData() {
     });
   });
   loadCollections();
+  loadHeroImage();
+}
+
+function loadHeroImage() {
+  fsLoadSettings(function (s) {
+    var el = document.getElementById("heroPreview");
+    if (el && s.heroImage) {
+      el.innerHTML = '<img src="' + s.heroImage + '" style="width:100%;height:100%;object-fit:cover;">';
+    }
+  });
+}
+
+function handleHeroImage(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var status = document.getElementById("heroSaveStatus");
+  status.textContent = "Compressing...";
+
+  var reader = new FileReader();
+  reader.onload = function (ev) {
+    compressImage(ev.target.result, 1200, 0.75, function (compressed) {
+      status.textContent = "Saving to Firestore...";
+      fsSaveSettings({ heroImage: compressed }).then(function () {
+        var el = document.getElementById("heroPreview");
+        el.innerHTML = '<img src="' + compressed + '" style="width:100%;height:100%;object-fit:cover;">';
+        status.textContent = "Saved! Refresh homepage to see.";
+        showToast("Hero image saved (" + Math.round(compressed.length / 1024) + "KB)");
+      }).catch(function (err) {
+        status.textContent = "Error: " + err.message;
+      });
+    });
+  };
+  reader.readAsDataURL(file);
+  e.target.value = "";
 }
 
 function loadCollections() {
@@ -396,4 +430,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".col-file-input").forEach(function (input) {
     input.addEventListener("change", handleCollectionImage);
   });
+
+  document.getElementById("heroImageFile").addEventListener("change", handleHeroImage);
 });
