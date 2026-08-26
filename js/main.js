@@ -157,18 +157,28 @@ function initAccordion(){
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menuToggle");
   const navLinks = document.getElementById("navLinks");
-  if(menuToggle){
+  if(menuToggle && navLinks){
+    /* Add close button inside mobile nav */
+    var closeBtn = document.createElement("button");
+    closeBtn.className = "nav-close";
+    closeBtn.innerHTML = "&times;";
+    closeBtn.setAttribute("aria-label", "Close menu");
+    navLinks.prepend(closeBtn);
+
+    function closeMobileMenu(){
+      navLinks.classList.remove("open");
+      menuToggle.classList.remove("active");
+    }
+
     menuToggle.addEventListener("click", () => {
       navLinks.classList.toggle("open");
       menuToggle.classList.toggle("active");
     });
-  }
-  if(navLinks){
+
+    closeBtn.addEventListener("click", closeMobileMenu);
+
     navLinks.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", () => {
-        navLinks.classList.remove("open");
-        if(menuToggle) menuToggle.classList.remove("active");
-      });
+      link.addEventListener("click", closeMobileMenu);
     });
   }
 
