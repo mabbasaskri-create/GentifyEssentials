@@ -1,12 +1,14 @@
 /* ==========================================================================
-   GENTIFY ESSENTIALS — Admin Panel (Firebase Storage + Firestore)
+   GENTIFY ESSENTIALS — Admin Panel (Firestore — images stored inline)
+   Images are compressed to ~400px and stored as base64 in Firestore.
+   No Firebase Storage needed — avoids CORS issues on Vercel.
    ========================================================================== */
 
 var editedProductId = null;
 var allProducts = [];
 var selectedImages = [null, null, null, null];
 
-function compressImage(base64, maxWidth, callback) {
+function compressImage(base64, maxWidth, quality, callback) {
   var img = new Image();
   img.onload = function () {
     var w = img.width;
@@ -18,23 +20,19 @@ function compressImage(base64, maxWidth, callback) {
     var canvas = document.createElement("canvas");
     canvas.width = w;
     canvas.height = h;
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0, w, h);
-    callback(canvas.toDataURL("image/jpeg", 0.8));
+    canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+    callback(canvas.toDataURL("image/jpeg", quality));
   };
   img.src = base64;
 }
 
 function renderAdminStats(products, orders) {
   document.getElementById("statProducts").textContent = products.length;
-
   var cats = {};
   products.forEach(function (p) { cats[p.category] = true; });
   document.getElementById("statCategories").textContent = Object.keys(cats).length;
-
   var total = products.reduce(function (sum, p) { return sum + (p.price || 0); }, 0);
   document.getElementById("statValue").textContent = formatPKR(total);
-
   document.getElementById("statOrders").textContent = orders.length;
 }
 
@@ -43,7 +41,6 @@ function renderAdminTable(filter) {
   if (filter && filter !== "all") {
     products = products.filter(function (p) { return p.category === filter; });
   }
-
   var tbody = document.getElementById("adminProductBody");
   tbody.innerHTML = products.map(function (p) {
     var oldP = p.oldPrice ? formatPKR(p.oldPrice) : "—";
@@ -65,7 +62,6 @@ function renderAdminTable(filter) {
       '</td>' +
     '</tr>';
   }).join("");
-
   if (products.length === 0) {
     tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#7c8797;padding:40px;">No products found.</td></tr>';
   }
@@ -74,31 +70,19 @@ function renderAdminTable(filter) {
 function renderAdminOrders(orders) {
   var tbody = document.getElementById("adminOrdersBody");
   var empty = document.getElementById("ordersEmpty");
-
-  if (orders.length === 0) {
-    tbody.innerHTML = "";
-    empty.style.display = "block";
-    return;
-  }
-
+  if (orders.length === 0) { tbody.innerHTML = ""; empty.style.display = "block"; return; }
   empty.style.display = "none";
   tbody.innerHTML = orders.map(function (o) {
     var items = (o.items || []).map(function (i) { return (i.name || i.id) + " x" + i.qty; }).join(", ");
-    var date = o.createdAt ? new Date(o.createdAt.seconds * 1000).toLocaleDateString() : "—";
-    return '<tr>' +
-      '<td>' + date + '</td>' +
-      '<td>' + items + '</td>' +
-      '<td>' + formatPKR(o.total || 0) + '</td>' +
-      '<td><span class="admin-badge">' + (o.status || "pending") + '</span></td>' +
-    '</tr>';
+    var date = o.createdAt && o.createdAt.seconds ? new Date(o.createdAt.seconds * 1000).toLocaleDateString() : "—";
+    return '<tr><td>' + date + '</td><td>' + items + '</td><td>' + formatPKR(o.total || 0) + '</td><td><span class="admin-badge">' + (o.status || "pending") + '</span></td></tr>';
   }).join("");
 }
 
 function resetImageSlots() {
   selectedImages = [null, null, null, null];
   for (var i = 0; i < 4; i++) {
-    var slot = document.getElementById("pfSlot" + i);
-    slot.classList.remove("has-image");
+    document.getElementById("pfSlot" + i).classList.remove("has-image");
     document.getElementById("pfImagePreview" + i).innerHTML = '<span>' + (i + 1) + '</span>';
   }
 }
@@ -106,29 +90,24 @@ function resetImageSlots() {
 function setImageSlot(slotIndex, src) {
   if (slotIndex < 0 || slotIndex > 3) return;
   selectedImages[slotIndex] = src;
-  var slot = document.getElementById("pfSlot" + slotIndex);
-  slot.classList.add("has-image");
+  document.getElementById("pfSlot" + slotIndex).classList.add("has-image");
   document.getElementById("pfImagePreview" + slotIndex).innerHTML = '<img src="' + src + '">';
 }
 
 function removeImageSlot(slotIndex) {
   selectedImages[slotIndex] = null;
-  var slot = document.getElementById("pfSlot" + slotIndex);
-  slot.classList.remove("has-image");
+  document.getElementById("pfSlot" + slotIndex).classList.remove("has-image");
   document.getElementById("pfImagePreview" + slotIndex).innerHTML = '<span>' + (slotIndex + 1) + '</span>';
 }
 
 function getNextEmptySlot() {
-  for (var i = 0; i < 4; i++) {
-    if (!selectedImages[i]) return i;
-  }
+  for (var i = 0; i < 4; i++) { if (!selectedImages[i]) return i; }
   return -1;
 }
 
 function editProduct(id) {
   var p = allProducts.find(function (x) { return x.id === id; });
   if (!p) return;
-
   editedProductId = id;
   document.getElementById("productModalTitle").textContent = "Edit Product";
   document.getElementById("pfName").value = p.name || "";
@@ -139,25 +118,16 @@ function editProduct(id) {
   document.getElementById("pfRating").value = p.rating || 4.5;
   document.getElementById("pfDesc").value = p.desc || "";
   document.getElementById("pfTags").value = (p.tags || []).join(", ");
-
   resetImageSlots();
   var imgs = p.images || (p.image ? [p.image] : []);
-  for (var i = 0; i < imgs.length && i < 4; i++) {
-    setImageSlot(i, imgs[i]);
-  }
-
+  for (var i = 0; i < imgs.length && i < 4; i++) { setImageSlot(i, imgs[i]); }
   document.getElementById("pfImageUrl").value = "";
   document.getElementById("productModal").classList.add("show");
 }
 
 function deleteProduct(id) {
   if (!confirm("Delete this product from Firebase?")) return;
-  fsDeleteProduct(id).then(function () {
-    showToast("Product deleted");
-    loadAllData();
-  }).catch(function (e) {
-    showToast("Error: " + e.message);
-  });
+  fsDeleteProduct(id).then(function () { showToast("Product deleted"); loadAllData(); }).catch(function (e) { showToast("Error: " + e.message); });
 }
 
 function openAddProduct() {
@@ -172,36 +142,11 @@ function closeModal() {
   document.getElementById("productModal").classList.remove("show");
 }
 
-function uploadAllImages(productId, images, callback) {
-  var urls = [];
-  var total = images.length;
-  if (total === 0) { callback(urls); return; }
-
-  var uploaded = 0;
-  images.forEach(function (src, index) {
-    if (src.indexOf("http") === 0 && src.indexOf("data:") !== 0) {
-      urls[index] = src;
-      uploaded++;
-      if (uploaded === total) callback(urls);
-    } else {
-      fsUploadImage(productId, index, src).then(function (url) {
-        urls[index] = url;
-        uploaded++;
-        if (uploaded === total) callback(urls);
-      }).catch(function (e) {
-        urls[index] = src;
-        uploaded++;
-        if (uploaded === total) callback(urls);
-      });
-    }
-  });
-}
-
 function handleProductSubmit(e) {
   e.preventDefault();
   var submitBtn = e.target.querySelector('[type="submit"]');
   submitBtn.disabled = true;
-  submitBtn.textContent = "Uploading images...";
+  submitBtn.textContent = "Compressing images...";
 
   var images = selectedImages.filter(function (img) { return img !== null; });
   var productId = editedProductId || ("prod-" + Date.now());
@@ -215,7 +160,8 @@ function handleProductSubmit(e) {
     rating: parseFloat(document.getElementById("pfRating").value) || 4.5,
     desc: document.getElementById("pfDesc").value.trim(),
     tags: document.getElementById("pfTags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
-    reviews: 0
+    reviews: 0,
+    id: productId
   };
 
   if (editedProductId) {
@@ -223,23 +169,51 @@ function handleProductSubmit(e) {
     if (existing) data.reviews = existing.reviews || 0;
   }
 
-  uploadAllImages(productId, images, function (uploadedUrls) {
-    data.image = uploadedUrls.length > 0 ? uploadedUrls[0] : "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product";
-    data.images = uploadedUrls;
-    data.id = productId;
+  var base64Images = images.filter(function (src) { return src.indexOf("data:") === 0; });
+  var urlImages = images.filter(function (src) { return src.indexOf("data:") !== 0; });
 
-    submitBtn.textContent = "Saving to Firestore...";
+  if (base64Images.length === 0) {
+    data.image = images.length > 0 ? images[0] : "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product";
+    data.images = images;
+    saveProductData(data, submitBtn);
+    return;
+  }
 
-    fsSaveProduct(data).then(function () {
-      closeModal();
-      showToast(editedProductId ? "Product updated" : "Product added");
-      loadAllData();
-    }).catch(function (e) {
-      showToast("Save error: " + e.message);
-    }).finally(function () {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Save Product";
+  var compressed = [];
+  var done = 0;
+  base64Images.forEach(function (src, idx) {
+    compressImage(src, 400, 0.7, function (resized) {
+      compressed[idx] = resized;
+      done++;
+      submitBtn.textContent = "Compressing... " + done + "/" + base64Images.length;
+      if (done === base64Images.length) {
+        var allImages = compressed.concat(urlImages);
+        data.image = allImages.length > 0 ? allImages[0] : data.image;
+        data.images = allImages;
+        saveProductData(data, submitBtn);
+      }
     });
+  });
+}
+
+function saveProductData(data, submitBtn) {
+  var totalSize = JSON.stringify(data).length;
+  if (totalSize > 900000) {
+    showToast("Images too large (" + Math.round(totalSize / 1024) + "KB). Use fewer or smaller images.");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Save Product";
+    return;
+  }
+  submitBtn.textContent = "Saving to Firestore...";
+  fsSaveProduct(data).then(function () {
+    closeModal();
+    showToast("Product saved to Firebase (" + Math.round(totalSize / 1024) + "KB)");
+    loadAllData();
+  }).catch(function (e) {
+    showToast("Error: " + e.message);
+  }).finally(function () {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Save Product";
   });
 }
 
@@ -248,7 +222,6 @@ function loadAllData() {
     allProducts = products;
     renderAdminTable(document.getElementById("adminCategoryFilter").value);
     renderAdminStats(products, []);
-
     fsLoadOrders(function (orders) {
       renderAdminOrders(orders);
       renderAdminStats(products, orders);
@@ -287,10 +260,7 @@ function syncToFirebase() {
     btn.textContent = "✓ SYNCED";
     showToast("All " + PRODUCTS.length + " products synced to Firebase");
     loadAllData();
-    setTimeout(function () {
-      btn.textContent = "⟳ SYNC TO FIREBASE";
-      btn.disabled = false;
-    }, 3000);
+    setTimeout(function () { btn.textContent = "⟳ SYNC TO FIREBASE"; btn.disabled = false; }, 3000);
   }).catch(function (e) {
     btn.textContent = "⟳ SYNC TO FIREBASE";
     btn.disabled = false;
@@ -303,7 +273,7 @@ function showToast(text) {
   if (!t) return;
   t.innerHTML = text;
   t.classList.add("show");
-  setTimeout(function () { t.classList.remove("show"); }, 2500);
+  setTimeout(function () { t.classList.remove("show"); }, 3000);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -322,8 +292,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".pf-img-remove").forEach(function (btn) {
     btn.addEventListener("click", function (e) {
       e.stopPropagation();
-      var slot = parseInt(this.getAttribute("data-slot"));
-      removeImageSlot(slot);
+      removeImageSlot(parseInt(this.getAttribute("data-slot")));
     });
   });
 
@@ -331,16 +300,12 @@ document.addEventListener("DOMContentLoaded", function () {
     var file = e.target.files[0];
     if (!file) return;
     var slot = getNextEmptySlot();
-    if (slot === -1) {
-      showToast("Max 4 images. Remove one first.");
-      return;
-    }
+    if (slot === -1) { showToast("Max 4 images. Remove one first."); return; }
     var reader = new FileReader();
     reader.onload = function (ev) {
-      showToast("Compressing image...");
-      compressImage(ev.target.result, 600, function (compressed) {
+      compressImage(ev.target.result, 400, 0.7, function (compressed) {
         setImageSlot(slot, compressed);
-        showToast("Image ready — click Save to upload");
+        showToast("Image ready — click Save");
       });
     };
     reader.readAsDataURL(file);
@@ -351,10 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var url = document.getElementById("pfImageUrl").value.trim();
     if (!url) { showToast("Paste an image URL first"); return; }
     var slot = getNextEmptySlot();
-    if (slot === -1) {
-      showToast("Max 4 images. Remove one first.");
-      return;
-    }
+    if (slot === -1) { showToast("Max 4 images. Remove one first."); return; }
     setImageSlot(slot, url);
     document.getElementById("pfImageUrl").value = "";
     showToast("Image added");
