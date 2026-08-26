@@ -187,8 +187,20 @@
           </div>
         </div>
         <div class="pf-row">
-          <label>Image URL</label>
-          <input type="url" id="pfImage" placeholder="https://...">
+          <label>Product Image</label>
+          <div class="pf-image-upload" id="pfImageUpload">
+            <div class="pf-image-preview" id="pfImagePreview">
+              <span>No image selected</span>
+            </div>
+            <div class="pf-image-actions">
+              <label class="btn btn-outline btn-sm pf-img-btn">
+                📁 Choose from Device
+                <input type="file" id="pfImageFile" accept="image/*" style="display:none;">
+              </label>
+              <span class="pf-img-or">OR</span>
+              <input type="url" id="pfImage" placeholder="Paste image URL here" class="pf-img-url">
+            </div>
+          </div>
         </div>
         <div class="pf-row">
           <label>Description</label>

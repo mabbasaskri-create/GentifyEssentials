@@ -4,6 +4,7 @@
 
 var editedProductId = null;
 var allProducts = [];
+var selectedImageBase64 = null;
 
 function renderAdminStats(products, orders) {
   document.getElementById("statProducts").textContent = products.length;
@@ -87,6 +88,18 @@ function editProduct(id) {
   document.getElementById("pfImage").value = p.image || "";
   document.getElementById("pfDesc").value = p.desc || "";
   document.getElementById("pfTags").value = (p.tags || []).join(", ");
+
+  selectedImageBase64 = null;
+  var preview = document.getElementById("pfImagePreview");
+  if (p.image && p.image.indexOf("data:") === 0) {
+    preview.innerHTML = '<img src="' + p.image + '">';
+    selectedImageBase64 = p.image;
+  } else if (p.image) {
+    preview.innerHTML = '<img src="' + p.image + '">';
+  } else {
+    preview.innerHTML = '<span>No image selected</span>';
+  }
+
   document.getElementById("productModal").classList.add("show");
 }
 
@@ -102,8 +115,10 @@ function deleteProduct(id) {
 
 function openAddProduct() {
   editedProductId = null;
+  selectedImageBase64 = null;
   document.getElementById("productModalTitle").textContent = "Add Product";
   document.getElementById("productForm").reset();
+  document.getElementById("pfImagePreview").innerHTML = '<span>No image selected</span>';
   document.getElementById("productModal").classList.add("show");
 }
 
@@ -120,7 +135,7 @@ function handleProductSubmit(e) {
     oldPrice: parseInt(document.getElementById("pfOldPrice").value) || null,
     badge: document.getElementById("pfBadge").value || null,
     rating: parseFloat(document.getElementById("pfRating").value) || 4.5,
-    image: document.getElementById("pfImage").value.trim() || "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product",
+    image: selectedImageBase64 || document.getElementById("pfImage").value.trim() || "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product",
     desc: document.getElementById("pfDesc").value.trim(),
     tags: document.getElementById("pfTags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
     reviews: 0
@@ -215,4 +230,20 @@ document.addEventListener("DOMContentLoaded", function () {
     renderAdminTable(this.value);
   });
   document.getElementById("syncFirebaseBtn").addEventListener("click", syncToFirebase);
+
+  document.getElementById("pfImageFile").addEventListener("change", function (e) {
+    var file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 500 * 1024) {
+      showToast("Image too large. Max 500KB.");
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      selectedImageBase64 = ev.target.result;
+      document.getElementById("pfImagePreview").innerHTML = '<img src="' + ev.target.result + '">';
+      document.getElementById("pfImage").value = "";
+    };
+    reader.readAsDataURL(file);
+  });
 });
