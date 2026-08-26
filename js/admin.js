@@ -4,7 +4,7 @@
 
 var editedProductId = null;
 var allProducts = [];
-var selectedImageBase64 = null;
+var selectedImages = [null, null, null, null];
 
 function renderAdminStats(products, orders) {
   document.getElementById("statProducts").textContent = products.length;
@@ -30,8 +30,10 @@ function renderAdminTable(filter) {
     var oldP = p.oldPrice ? formatPKR(p.oldPrice) : "—";
     var badge = p.badge || "—";
     var catLabel = (typeof CATEGORY_META !== "undefined" && CATEGORY_META[p.category]) ? CATEGORY_META[p.category].label : p.category;
+    var imgs = p.images || (p.image ? [p.image] : []);
+    var thumb = imgs.length > 0 ? imgs[0] : "";
     return '<tr>' +
-      '<td><img src="' + (p.image || "") + '" alt="" style="width:48px;height:48px;object-fit:cover;"></td>' +
+      '<td><img src="' + thumb + '" alt="" style="width:48px;height:48px;object-fit:cover;"></td>' +
       '<td><strong>' + (p.name || "") + '</strong></td>' +
       '<td>' + catLabel + '</td>' +
       '<td>' + formatPKR(p.price || 0) + '</td>' +
@@ -73,6 +75,37 @@ function renderAdminOrders(orders) {
   }).join("");
 }
 
+function resetImageSlots() {
+  selectedImages = [null, null, null, null];
+  for (var i = 0; i < 4; i++) {
+    var slot = document.getElementById("pfSlot" + i);
+    slot.classList.remove("has-image");
+    document.getElementById("pfImagePreview" + i).innerHTML = '<span>' + (i + 1) + '</span>';
+  }
+}
+
+function setImageSlot(slotIndex, src) {
+  if (slotIndex < 0 || slotIndex > 3) return;
+  selectedImages[slotIndex] = src;
+  var slot = document.getElementById("pfSlot" + slotIndex);
+  slot.classList.add("has-image");
+  document.getElementById("pfImagePreview" + slotIndex).innerHTML = '<img src="' + src + '">';
+}
+
+function removeImageSlot(slotIndex) {
+  selectedImages[slotIndex] = null;
+  var slot = document.getElementById("pfSlot" + slotIndex);
+  slot.classList.remove("has-image");
+  document.getElementById("pfImagePreview" + slotIndex).innerHTML = '<span>' + (slotIndex + 1) + '</span>';
+}
+
+function getNextEmptySlot() {
+  for (var i = 0; i < 4; i++) {
+    if (!selectedImages[i]) return i;
+  }
+  return -1;
+}
+
 function editProduct(id) {
   var p = allProducts.find(function (x) { return x.id === id; });
   if (!p) return;
@@ -85,21 +118,16 @@ function editProduct(id) {
   document.getElementById("pfOldPrice").value = p.oldPrice || "";
   document.getElementById("pfBadge").value = p.badge || "";
   document.getElementById("pfRating").value = p.rating || 4.5;
-  document.getElementById("pfImage").value = p.image || "";
   document.getElementById("pfDesc").value = p.desc || "";
   document.getElementById("pfTags").value = (p.tags || []).join(", ");
 
-  selectedImageBase64 = null;
-  var preview = document.getElementById("pfImagePreview");
-  if (p.image && p.image.indexOf("data:") === 0) {
-    preview.innerHTML = '<img src="' + p.image + '">';
-    selectedImageBase64 = p.image;
-  } else if (p.image) {
-    preview.innerHTML = '<img src="' + p.image + '">';
-  } else {
-    preview.innerHTML = '<span>No image selected</span>';
+  resetImageSlots();
+  var imgs = p.images || (p.image ? [p.image] : []);
+  for (var i = 0; i < imgs.length && i < 4; i++) {
+    setImageSlot(i, imgs[i]);
   }
 
+  document.getElementById("pfImageUrl").value = "";
   document.getElementById("productModal").classList.add("show");
 }
 
@@ -115,10 +143,9 @@ function deleteProduct(id) {
 
 function openAddProduct() {
   editedProductId = null;
-  selectedImageBase64 = null;
   document.getElementById("productModalTitle").textContent = "Add Product";
   document.getElementById("productForm").reset();
-  document.getElementById("pfImagePreview").innerHTML = '<span>No image selected</span>';
+  resetImageSlots();
   document.getElementById("productModal").classList.add("show");
 }
 
@@ -128,6 +155,9 @@ function closeModal() {
 
 function handleProductSubmit(e) {
   e.preventDefault();
+
+  var images = selectedImages.filter(function (img) { return img !== null; });
+
   var data = {
     name: document.getElementById("pfName").value.trim(),
     category: document.getElementById("pfCategory").value,
@@ -135,7 +165,8 @@ function handleProductSubmit(e) {
     oldPrice: parseInt(document.getElementById("pfOldPrice").value) || null,
     badge: document.getElementById("pfBadge").value || null,
     rating: parseFloat(document.getElementById("pfRating").value) || 4.5,
-    image: selectedImageBase64 || document.getElementById("pfImage").value.trim() || "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product",
+    image: images.length > 0 ? images[0] : "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product",
+    images: images,
     desc: document.getElementById("pfDesc").value.trim(),
     tags: document.getElementById("pfTags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
     reviews: 0
@@ -188,6 +219,7 @@ function syncToFirebase() {
       rating: p.rating || 0,
       reviews: p.reviews || 0,
       image: p.image || "",
+      images: p.images || (p.image ? [p.image] : []),
       desc: p.desc || "",
       tags: p.tags || [],
       sizes: p.sizes || null
@@ -231,19 +263,39 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   document.getElementById("syncFirebaseBtn").addEventListener("click", syncToFirebase);
 
+  document.querySelectorAll(".pf-img-remove").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var slot = parseInt(this.getAttribute("data-slot"));
+      removeImageSlot(slot);
+    });
+  });
+
   document.getElementById("pfImageFile").addEventListener("change", function (e) {
     var file = e.target.files[0];
     if (!file) return;
-    if (file.size > 500 * 1024) {
-      showToast("Image too large. Max 500KB.");
+    var slot = getNextEmptySlot();
+    if (slot === -1) {
+      showToast("Max 4 images allowed. Remove one first.");
       return;
     }
     var reader = new FileReader();
     reader.onload = function (ev) {
-      selectedImageBase64 = ev.target.result;
-      document.getElementById("pfImagePreview").innerHTML = '<img src="' + ev.target.result + '">';
-      document.getElementById("pfImage").value = "";
+      setImageSlot(slot, ev.target.result);
     };
     reader.readAsDataURL(file);
+    e.target.value = "";
+  });
+
+  document.getElementById("pfAddUrlBtn").addEventListener("click", function () {
+    var url = document.getElementById("pfImageUrl").value.trim();
+    if (!url) { showToast("Paste an image URL first"); return; }
+    var slot = getNextEmptySlot();
+    if (slot === -1) {
+      showToast("Max 4 images allowed. Remove one first.");
+      return;
+    }
+    setImageSlot(slot, url);
+    document.getElementById("pfImageUrl").value = "";
   });
 });

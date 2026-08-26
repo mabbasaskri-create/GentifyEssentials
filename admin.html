@@ -187,19 +187,33 @@
           </div>
         </div>
         <div class="pf-row">
-          <label>Product Image</label>
-          <div class="pf-image-upload" id="pfImageUpload">
-            <div class="pf-image-preview" id="pfImagePreview">
-              <span>No image selected</span>
+          <label>Product Images (max 4)</label>
+          <div class="pf-images-grid" id="pfImagesGrid">
+            <div class="pf-image-slot" id="pfSlot0">
+              <div class="pf-image-preview" id="pfImagePreview0"><span>1</span></div>
+              <button class="pf-img-remove" data-slot="0" type="button">&times;</button>
             </div>
-            <div class="pf-image-actions">
-              <label class="btn btn-outline btn-sm pf-img-btn">
-                📁 Choose from Device
-                <input type="file" id="pfImageFile" accept="image/*" style="display:none;">
-              </label>
-              <span class="pf-img-or">OR</span>
-              <input type="url" id="pfImage" placeholder="Paste image URL here" class="pf-img-url">
+            <div class="pf-image-slot" id="pfSlot1">
+              <div class="pf-image-preview" id="pfImagePreview1"><span>2</span></div>
+              <button class="pf-img-remove" data-slot="1" type="button">&times;</button>
             </div>
+            <div class="pf-image-slot" id="pfSlot2">
+              <div class="pf-image-preview" id="pfImagePreview2"><span>3</span></div>
+              <button class="pf-img-remove" data-slot="2" type="button">&times;</button>
+            </div>
+            <div class="pf-image-slot" id="pfSlot3">
+              <div class="pf-image-preview" id="pfImagePreview3"><span>4</span></div>
+              <button class="pf-img-remove" data-slot="3" type="button">&times;</button>
+            </div>
+          </div>
+          <div class="pf-image-actions">
+            <label class="btn btn-outline btn-sm pf-img-btn">
+              📁 Choose from Device
+              <input type="file" id="pfImageFile" accept="image/*" style="display:none;">
+            </label>
+            <span class="pf-img-or">OR</span>
+            <input type="url" id="pfImageUrl" placeholder="Paste image URL here" class="pf-img-url">
+            <button class="btn btn-gold btn-sm" id="pfAddUrlBtn" type="button">Add URL</button>
           </div>
         </div>
         <div class="pf-row">
