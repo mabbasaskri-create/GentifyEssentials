@@ -203,18 +203,18 @@ header.site-header{
   content:""; position:absolute; inset:0;
   background:transparent; pointer-events:none;
 }
-.hero-inner{ position:relative; max-width:640px; z-index:2; }
-.hero .eyebrow{ color:var(--gold-soft); }
+.hero-inner{ position:relative; max-width:100%; z-index:2; }
+.hero .eyebrow{ color:var(--gold-soft); font-size:16px; }
 .hero .eyebrow::before{ background:var(--gold-soft); }
 .hero h1{
-  color:var(--ivory); font-size:clamp(40px,6vw,66px); line-height:1.06; margin-top:20px;
+  color:var(--ivory); font-size:clamp(48px,7vw,80px); line-height:1.04; margin-top:24px;
 }
 .hero h1 em{ color:var(--gold-soft); font-style:italic; }
-.hero p.lede{ margin-top:22px; font-size:17px; color:rgba(246,242,233,0.78); max-width:480px; }
-.hero-cta{ margin-top:38px; display:flex; gap:16px; flex-wrap:wrap; }
-.hero-tags{ margin-top:56px; display:flex; gap:34px; flex-wrap:wrap; }
-.hero-tags div{ font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:rgba(246,242,233,.65); }
-.hero-tags strong{ display:block; font-family:var(--ff-display); font-size:22px; color:var(--gold-soft); font-weight:600; letter-spacing:0; }
+.hero p.lede{ margin-top:24px; font-size:20px; color:rgba(246,242,233,0.85); max-width:600px; line-height:1.6; }
+.hero-cta{ margin-top:44px; display:flex; gap:18px; flex-wrap:wrap; }
+.hero-tags{ margin-top:60px; display:flex; gap:40px; flex-wrap:wrap; }
+.hero-tags div{ font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:rgba(246,242,233,.7); }
+.hero-tags strong{ display:block; font-family:var(--ff-display); font-size:26px; color:var(--gold-soft); font-weight:600; letter-spacing:0; }
 
 /* ---------- Page header (category/about/returns) ---------- */
 .page-hero{
