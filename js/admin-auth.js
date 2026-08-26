@@ -4,6 +4,8 @@
 
 (function () {
   var auth = firebase.auth();
+  var db = firebase.firestore();
+  var provider = new firebase.auth.GoogleAuthProvider();
 
   auth.onAuthStateChanged(function (user) {
     if (user && user.email === "m.abbas.askri@gmail.com") {
@@ -17,10 +19,7 @@
       if (letter) letter.textContent = name.charAt(0).toUpperCase();
       if (dropdownName) dropdownName.textContent = name;
 
-      var products = getProducts();
-      renderAdminStats(products);
-      renderAdminTable("all");
-      renderAdminOrders();
+      loadAllData();
     } else if (user) {
       document.getElementById("adminGuard").style.display = "block";
       document.getElementById("adminPanel").style.display = "none";
@@ -34,7 +33,6 @@
   var signOutBtn = document.getElementById("googleSignOutBtn");
   var avatarBtn = document.getElementById("googleAvatarBtn");
   var dropdown = document.getElementById("googleUserDropdown");
-  var provider = new firebase.auth.GoogleAuthProvider();
 
   if (signInBtn) {
     signInBtn.addEventListener("click", function () {

@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="css/style.css">
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -53,7 +54,10 @@
   <div class="wrap">
 
     <div class="admin-top">
-      <h1 class="admin-title">Dashboard</h1>
+      <div>
+        <h1 class="admin-title">Dashboard</h1>
+        <a href="https://console.firebase.google.com/project/gentifyessentials/overview" target="_blank" class="admin-firebase-link">🔗 Link to Firebase — View all data in Firebase Console</a>
+      </div>
       <span class="admin-email" id="adminEmail"></span>
     </div>
 
@@ -207,16 +211,7 @@
 
 <script src="js/products.js"></script>
 <script src="js/admin.js"></script>
-<script>
-  firebase.initializeApp({
-    apiKey: "AIzaSyDGUg1O9WzIyM0ZvUq7b-vzsVVulidRrjo",
-    authDomain: "gentifyessentials.firebaseapp.com",
-    projectId: "gentifyessentials",
-    storageBucket: "gentifyessentials.firebasestorage.app",
-    messagingSenderId: "1007484414760",
-    appId: "1:1007484414760:web:5c03d0a109452f6eeefe1d"
-  });
-</script>
+<script src="js/auth.js"></script>
 <script src="js/admin-auth.js"></script>
 </body>
 </html>

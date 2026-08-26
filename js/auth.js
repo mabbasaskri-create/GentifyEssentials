@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GENTIFY ESSENTIALS — Firebase Google Sign-In
+   GENTIFY ESSENTIALS — Firebase Init + Google Sign-In
    ========================================================================== */
 
 var ADMIN_EMAIL = "m.abbas.askri@gmail.com";
@@ -16,6 +16,7 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 var auth = firebase.auth();
+var db = firebase.firestore();
 var provider = new firebase.auth.GoogleAuthProvider();
 
 function initGoogleAuth() {
@@ -100,6 +101,44 @@ function showSignedOut() {
   if (signedOut) signedOut.style.display = "";
   if (signedIn) signedIn.style.display = "none";
   if (dropdown) dropdown.classList.remove("open");
+}
+
+/* ---- Firestore helpers ---- */
+function fsLoadProducts(callback) {
+  db.collection("products").orderBy("category").get().then(function (snap) {
+    var list = [];
+    snap.forEach(function (doc) {
+      list.push(Object.assign({ id: doc.id }, doc.data()));
+    });
+    callback(list);
+  }).catch(function () {
+    callback(PRODUCTS.slice());
+  });
+}
+
+function fsSaveProduct(data) {
+  var docRef = db.collection("products").doc(data.id);
+  return docRef.set(data);
+}
+
+function fsDeleteProduct(id) {
+  return db.collection("products").doc(id).delete();
+}
+
+function fsSaveOrder(order) {
+  return db.collection("orders").add(order);
+}
+
+function fsLoadOrders(callback) {
+  db.collection("orders").orderBy("createdAt", "desc").get().then(function (snap) {
+    var list = [];
+    snap.forEach(function (doc) {
+      list.push(Object.assign({ id: doc.id }, doc.data()));
+    });
+    callback(list);
+  }).catch(function () {
+    callback([]);
+  });
 }
 
 document.addEventListener("DOMContentLoaded", initGoogleAuth);
