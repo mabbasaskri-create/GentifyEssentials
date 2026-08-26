@@ -1,10 +1,29 @@
 /* ==========================================================================
-   GENTIFY ESSENTIALS — Admin Panel (Firestore)
+   GENTIFY ESSENTIALS — Admin Panel (Firebase Storage + Firestore)
    ========================================================================== */
 
 var editedProductId = null;
 var allProducts = [];
 var selectedImages = [null, null, null, null];
+
+function compressImage(base64, maxWidth, callback) {
+  var img = new Image();
+  img.onload = function () {
+    var w = img.width;
+    var h = img.height;
+    if (w > maxWidth) {
+      h = Math.round((h * maxWidth) / w);
+      w = maxWidth;
+    }
+    var canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, w, h);
+    callback(canvas.toDataURL("image/jpeg", 0.8));
+  };
+  img.src = base64;
+}
 
 function renderAdminStats(products, orders) {
   document.getElementById("statProducts").textContent = products.length;
@@ -153,10 +172,39 @@ function closeModal() {
   document.getElementById("productModal").classList.remove("show");
 }
 
+function uploadAllImages(productId, images, callback) {
+  var urls = [];
+  var total = images.length;
+  if (total === 0) { callback(urls); return; }
+
+  var uploaded = 0;
+  images.forEach(function (src, index) {
+    if (src.indexOf("http") === 0 && src.indexOf("data:") !== 0) {
+      urls[index] = src;
+      uploaded++;
+      if (uploaded === total) callback(urls);
+    } else {
+      fsUploadImage(productId, index, src).then(function (url) {
+        urls[index] = url;
+        uploaded++;
+        if (uploaded === total) callback(urls);
+      }).catch(function (e) {
+        urls[index] = src;
+        uploaded++;
+        if (uploaded === total) callback(urls);
+      });
+    }
+  });
+}
+
 function handleProductSubmit(e) {
   e.preventDefault();
+  var submitBtn = e.target.querySelector('[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Uploading images...";
 
   var images = selectedImages.filter(function (img) { return img !== null; });
+  var productId = editedProductId || ("prod-" + Date.now());
 
   var data = {
     name: document.getElementById("pfName").value.trim(),
@@ -165,25 +213,33 @@ function handleProductSubmit(e) {
     oldPrice: parseInt(document.getElementById("pfOldPrice").value) || null,
     badge: document.getElementById("pfBadge").value || null,
     rating: parseFloat(document.getElementById("pfRating").value) || 4.5,
-    image: images.length > 0 ? images[0] : "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product",
-    images: images,
     desc: document.getElementById("pfDesc").value.trim(),
     tags: document.getElementById("pfTags").value.split(",").map(function (t) { return t.trim(); }).filter(Boolean),
     reviews: 0
   };
 
   if (editedProductId) {
-    data.id = editedProductId;
-  } else {
-    data.id = "prod-" + Date.now();
+    var existing = allProducts.find(function (p) { return p.id === editedProductId; });
+    if (existing) data.reviews = existing.reviews || 0;
   }
 
-  fsSaveProduct(data).then(function () {
-    closeModal();
-    showToast(editedProductId ? "Product updated in Firebase" : "Product added to Firebase");
-    loadAllData();
-  }).catch(function (e) {
-    showToast("Error: " + e.message);
+  uploadAllImages(productId, images, function (uploadedUrls) {
+    data.image = uploadedUrls.length > 0 ? uploadedUrls[0] : "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product";
+    data.images = uploadedUrls;
+    data.id = productId;
+
+    submitBtn.textContent = "Saving to Firestore...";
+
+    fsSaveProduct(data).then(function () {
+      closeModal();
+      showToast(editedProductId ? "Product updated" : "Product added");
+      loadAllData();
+    }).catch(function (e) {
+      showToast("Save error: " + e.message);
+    }).finally(function () {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Save Product";
+    });
   });
 }
 
@@ -276,12 +332,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!file) return;
     var slot = getNextEmptySlot();
     if (slot === -1) {
-      showToast("Max 4 images allowed. Remove one first.");
+      showToast("Max 4 images. Remove one first.");
       return;
     }
     var reader = new FileReader();
     reader.onload = function (ev) {
-      setImageSlot(slot, ev.target.result);
+      showToast("Compressing image...");
+      compressImage(ev.target.result, 600, function (compressed) {
+        setImageSlot(slot, compressed);
+        showToast("Image ready — click Save to upload");
+      });
     };
     reader.readAsDataURL(file);
     e.target.value = "";
@@ -292,10 +352,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!url) { showToast("Paste an image URL first"); return; }
     var slot = getNextEmptySlot();
     if (slot === -1) {
-      showToast("Max 4 images allowed. Remove one first.");
+      showToast("Max 4 images. Remove one first.");
       return;
     }
     setImageSlot(slot, url);
     document.getElementById("pfImageUrl").value = "";
+    showToast("Image added");
   });
 });

@@ -17,6 +17,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var auth = firebase.auth();
 var db = firebase.firestore();
+var storage = firebase.storage();
 var provider = new firebase.auth.GoogleAuthProvider();
 
 function initGoogleAuth() {
@@ -127,6 +128,13 @@ function fsDeleteProduct(id) {
 
 function fsSaveOrder(order) {
   return db.collection("orders").add(order);
+}
+
+function fsUploadImage(productId, slotIndex, base64Data) {
+  var ref = storage.ref("products/" + productId + "/img_" + slotIndex + ".jpg");
+  return ref.putString(base64Data, "data_url").then(function () {
+    return ref.getDownloadURL();
+  });
 }
 
 function fsLoadOrders(callback) {
