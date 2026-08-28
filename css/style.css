@@ -161,7 +161,7 @@ header.site-header{
 .google-dropdown-signout:hover{ background:var(--ivory-2); }
 .google-dropdown-admin{
   display:none; width:100%; text-align:left; padding:12px 18px; background:none; border:none;
-  border-bottom:1px solid var(--line); font-size:13px; color:var(--gold); font-weight:600;
+  border-top:1px solid var(--line); font-size:13px; color:var(--gold); font-weight:600;
   cursor:pointer; font-family:var(--ff-body); transition:background .2s;
 }
 .google-dropdown-admin:hover{ background:var(--ivory-2); }
@@ -639,6 +639,13 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
 .mobile-drawer-signout{ margin-top:4px; width:100%; }
+.mobile-drawer-admin{
+  width:100%; text-align:left; padding:12px 14px; margin-top:8px;
+  background:none; border:1px solid var(--line); border-radius:var(--radius);
+  font-size:13px; letter-spacing:.02em; color:var(--gold); font-weight:600;
+  cursor:pointer; font-family:var(--ff-body); transition:background .2s;
+}
+.mobile-drawer-admin:hover{ background:var(--ivory-2); }
 .mobile-overlay{
   position:fixed; inset:0; background:rgba(11,31,58,.55); z-index:150;
   opacity:0; visibility:hidden; transition:.35s;

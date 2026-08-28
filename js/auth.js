@@ -130,14 +130,22 @@ function updateMobileAuth() {
   if (user) {
     var letter = (user.displayName || user.email || "?").charAt(0).toUpperCase();
     var name = user.displayName || user.email || "";
+    var adminBtn = "";
+    if (isAdminEmail(user.email)) {
+      adminBtn =
+        '<button class="mobile-drawer-admin" id="mobileAdminBtn" type="button">★ Admin Panel</button>';
+    }
     slot.innerHTML =
       '<div class="mobile-user">' +
         '<span class="mobile-user-avatar">' + letter + '</span>' +
         '<div class="mobile-user-name">' + name + '</div>' +
       '</div>' +
-      '<button class="btn btn-outline btn-sm mobile-drawer-signout" id="mobileSignOutBtn" type="button">Sign out</button>';
+      '<button class="mobile-drawer-signout" id="mobileSignOutBtn" type="button">Sign out</button>' +
+      adminBtn;
     var so = document.getElementById("mobileSignOutBtn");
     if (so) so.addEventListener("click", function () { auth.signOut(); });
+    var ma = document.getElementById("mobileAdminBtn");
+    if (ma) ma.addEventListener("click", function () { window.location.href = "admin.html"; });
   } else {
     slot.innerHTML =
       '<button class="google-signin-btn" id="mobileSignInBtn" type="button">' +
