@@ -4,6 +4,14 @@
 
 var ADMIN_EMAIL = "m.abbas.askri@gmail.com";
 
+/* Robust admin check — case-insensitive + trims whitespace so minor
+   spelling/case differences in the Google account never hide the
+   Admin Panel button. */
+function isAdminEmail(email) {
+  if (!email) return false;
+  return String(email).trim().toLowerCase() === ADMIN_EMAIL.toLowerCase();
+}
+
 var firebaseConfig = {
   apiKey: "AIzaSyDGUg1O9WzIyM0ZvUq7b-vzsVVulidRrjo",
   authDomain: "gentifyessentials.firebaseapp.com",
@@ -85,7 +93,7 @@ function showSignedInUser(user) {
   if (dropdownName) dropdownName.textContent = name;
 
   if (adminLink) {
-    if (user.email === ADMIN_EMAIL) {
+    if (isAdminEmail(user.email)) {
       adminLink.classList.add("show");
     } else {
       adminLink.classList.remove("show");

@@ -8,7 +8,7 @@
   var provider = new firebase.auth.GoogleAuthProvider();
 
   auth.onAuthStateChanged(function (user) {
-    if (user && user.email === "m.abbas.askri@gmail.com") {
+    if (user && isAdminEmail(user.email)) {
       document.getElementById("adminGuard").style.display = "none";
       document.getElementById("adminPanel").style.display = "block";
       document.getElementById("adminEmail").textContent = user.email;
