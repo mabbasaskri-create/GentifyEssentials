@@ -27,6 +27,7 @@ function addToCart(id, qty){
   renderCartDrawer();
   var p = findProduct(id);
   showToast(p ? p.name + " added to cart" : "Added to cart");
+  if (p && typeof setWhatsAppProduct === "function") setWhatsAppProduct(p.name);
 }
 function removeFromCart(id){
   saveCart(getCart().filter(function(l){ return l.id !== id; }));

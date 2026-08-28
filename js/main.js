@@ -76,6 +76,7 @@ function openQuickView(id){
       </div>
     </div>`;
   document.getElementById("quickViewModal").classList.add("show");
+  if (typeof setWhatsAppProduct === "function") setWhatsAppProduct(p.name);
 }
 function changeQuickViewQty(delta){
   quickViewQty = Math.max(1, quickViewQty + delta);
