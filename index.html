@@ -8,10 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://firestore.googleapis.com">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="stylesheet" href="css/style.css">
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -246,17 +245,27 @@
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/whatsapp.js"></script>
 <script>
-  fsLoadProducts(function(fbProducts){
-    if(fbProducts.length > 0){
-      PRODUCTS.length = 0;
-      fbProducts.forEach(function(p){ PRODUCTS.push(p); });
-    }
-    var premiumPicks = PRODUCTS.filter(p => p.tags && p.tags.includes("Bestseller"));
+  function renderPremium() {
+    var premiumPicks = PRODUCTS.filter(function (p) { return p.tags && p.tags.includes("Bestseller"); });
     renderGrid("premiumGrid", premiumPicks);
-  });
+  }
+  function refreshPremium(list) {
+    mergeProductCatalog(list);
+    renderPremium();
+    if (typeof prefetchProductImages === "function") prefetchProductImages(PRODUCTS);
+  }
+  if (typeof cacheGet === "function") {
+    var cachedProducts = cacheGet("products");
+    if (cachedProducts && cachedProducts.length) mergeProductCatalog(cachedProducts);
+  }
+  renderPremium();
+  fsLoadProducts(refreshPremium, refreshPremium);
 </script>
 </body>
 </html>

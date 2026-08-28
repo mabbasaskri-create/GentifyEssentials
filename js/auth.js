@@ -25,7 +25,78 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var auth = firebase.auth();
 var db = firebase.firestore();
+db.enablePersistence({ synchronizeTabs: true }).catch(function () {});
 var provider = new firebase.auth.GoogleAuthProvider();
+
+/* ---- Catalog cache (localStorage, ~10 min) ---- */
+var CACHE_PREFIX = "gentify_cache_";
+var CACHE_TTL_MS = 10 * 60 * 1000;
+var _inflight = {};
+
+function cacheGet(key) {
+  try {
+    var raw = localStorage.getItem(CACHE_PREFIX + key);
+    if (!raw) return null;
+    var parsed = JSON.parse(raw);
+    if (Date.now() - parsed.ts > CACHE_TTL_MS) {
+      localStorage.removeItem(CACHE_PREFIX + key);
+      return null;
+    }
+    return parsed.data;
+  } catch (e) {
+    return null;
+  }
+}
+
+function cacheSet(key, data) {
+  try {
+    localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ ts: Date.now(), data: data }));
+  } catch (e) {
+    try {
+      ["products", "collections", "settings"].forEach(function (k) {
+        if (k !== key) localStorage.removeItem(CACHE_PREFIX + k);
+      });
+      localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ ts: Date.now(), data: data }));
+    } catch (e2) {}
+  }
+}
+
+function dedupeFetch(key, fetchFn) {
+  if (_inflight[key]) return _inflight[key];
+  _inflight[key] = fetchFn().finally(function () {
+    delete _inflight[key];
+  });
+  return _inflight[key];
+}
+
+function mergeProductCatalog(list) {
+  if (!list || !list.length) return;
+  PRODUCTS.length = 0;
+  list.forEach(function (p) { PRODUCTS.push(p); });
+}
+window.mergeProductCatalog = mergeProductCatalog;
+
+function fetchSiteBundleFromNetwork() {
+  return Promise.all([
+    db.collection("products").orderBy("category").get(),
+    db.collection("collections").get(),
+    db.collection("settings").doc("site").get()
+  ]).then(function (results) {
+    var products = [];
+    results[0].forEach(function (doc) {
+      products.push(Object.assign({ id: doc.id }, doc.data()));
+    });
+    var collections = [];
+    results[1].forEach(function (doc) {
+      collections.push(Object.assign({ id: doc.id }, doc.data()));
+    });
+    var settings = results[2].exists ? results[2].data() : {};
+    cacheSet("products", products);
+    cacheSet("collections", collections);
+    cacheSet("settings", settings);
+    return { products: products, collections: collections, settings: settings };
+  });
+}
 
 function initGoogleAuth() {
   var signInBtn = document.getElementById("googleSignInBtn");
@@ -162,16 +233,49 @@ function updateMobileAuth() {
 window.updateMobileAuth = updateMobileAuth;
 
 /* ---- Firestore helpers ---- */
-function fsLoadProducts(callback) {
-  db.collection("products").orderBy("category").get().then(function (snap) {
-    var list = [];
-    snap.forEach(function (doc) {
-      list.push(Object.assign({ id: doc.id }, doc.data()));
+function fsLoadProducts(callback, onUpdate) {
+  var cached = cacheGet("products");
+  var fromCache = !!(cached && cached.length);
+  if (fromCache) callback(cached);
+
+  dedupeFetch("siteBundle", fetchSiteBundleFromNetwork)
+    .then(function (bundle) {
+      if (!fromCache) callback(bundle.products);
+      else if (onUpdate) onUpdate(bundle.products);
+    })
+    .catch(function () {
+      if (!fromCache) callback(PRODUCTS.slice());
     });
-    callback(list);
-  }).catch(function () {
-    callback(PRODUCTS.slice());
-  });
+}
+
+function fsLoadSiteBundle(callback, onUpdate) {
+  var cachedProducts = cacheGet("products");
+  var cachedCollections = cacheGet("collections");
+  var cachedSettings = cacheGet("settings");
+  var fromCache = !!(cachedProducts || cachedCollections || cachedSettings);
+
+  if (fromCache) {
+    callback({
+      products: (cachedProducts && cachedProducts.length) ? cachedProducts : PRODUCTS.slice(),
+      collections: cachedCollections || [],
+      settings: cachedSettings || {}
+    });
+  }
+
+  dedupeFetch("siteBundle", fetchSiteBundleFromNetwork)
+    .then(function (bundle) {
+      if (!fromCache) callback(bundle);
+      else if (onUpdate) onUpdate(bundle);
+    })
+    .catch(function () {
+      if (!fromCache) {
+        callback({
+          products: PRODUCTS.slice(),
+          collections: [],
+          settings: {}
+        });
+      }
+    });
 }
 
 function fsSaveProduct(data) {
@@ -199,27 +303,38 @@ function fsLoadOrders(callback) {
   });
 }
 
-function fsLoadCollections(callback) {
-  db.collection("collections").get().then(function (snap) {
-    var list = [];
-    snap.forEach(function (doc) {
-      list.push(Object.assign({ id: doc.id }, doc.data()));
+function fsLoadCollections(callback, onUpdate) {
+  var cached = cacheGet("collections");
+  var fromCache = !!cached;
+  if (fromCache) callback(cached);
+
+  dedupeFetch("siteBundle", fetchSiteBundleFromNetwork)
+    .then(function (bundle) {
+      if (!fromCache) callback(bundle.collections);
+      else if (onUpdate) onUpdate(bundle.collections);
+    })
+    .catch(function () {
+      if (!fromCache) callback([]);
     });
-    callback(list);
-  }).catch(function () {
-    callback([]);
-  });
 }
 
 function fsSaveCollection(data) {
   return db.collection("collections").doc(data.id).set(data);
 }
 
-function fsLoadSettings(callback) {
-  db.collection("settings").doc("site").get().then(function (doc) {
-    if (doc.exists) callback(doc.data());
-    else callback({});
-  }).catch(function () { callback({}); });
+function fsLoadSettings(callback, onUpdate) {
+  var cached = cacheGet("settings");
+  var fromCache = !!cached;
+  if (fromCache) callback(cached);
+
+  dedupeFetch("siteBundle", fetchSiteBundleFromNetwork)
+    .then(function (bundle) {
+      if (!fromCache) callback(bundle.settings);
+      else if (onUpdate) onUpdate(bundle.settings);
+    })
+    .catch(function () {
+      if (!fromCache) callback({});
+    });
 }
 
 function fsSaveSettings(data) {
@@ -227,3 +342,6 @@ function fsSaveSettings(data) {
 }
 
 document.addEventListener("DOMContentLoaded", initGoogleAuth);
+
+/* Start Firestore fetch immediately — don't wait for DOMContentLoaded */
+dedupeFetch("siteBundle", fetchSiteBundleFromNetwork).catch(function () {});

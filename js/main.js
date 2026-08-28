@@ -247,79 +247,132 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   initAccordion();
-  loadCollectionImages();
-  loadHeroImage();
-  loadCategoryHero();
+  if (typeof fsLoadSiteBundle === "function") {
+    fsLoadSiteBundle(applySiteBundle, applySiteBundle);
+  } else {
+    loadCollectionImages();
+    loadHeroImage();
+    loadCategoryHero();
+  }
 });
 
-function loadCategoryHero() {
-  if (typeof fsLoadCollections === "undefined") return;
+function prefetchImages(urls) {
+  if (!urls || !urls.length) return;
+  urls.forEach(function (url) {
+    if (!url) return;
+    var img = new Image();
+    img.decoding = "async";
+    img.src = url;
+  });
+}
+
+function prefetchProductImages(products, limit) {
+  limit = limit || 16;
+  var urls = [];
+  products.slice(0, limit).forEach(function (p) {
+    if (p.image) urls.push(p.image);
+    if (p.images) {
+      p.images.forEach(function (u) { if (u) urls.push(u); });
+    }
+  });
+  prefetchImages(urls);
+}
+window.prefetchProductImages = prefetchProductImages;
+
+function applyCollectionImages(cols) {
+  var ids = ["caps", "watches", "perfumes", "tshirts", "wallets"];
+  var map = {};
+  cols.forEach(function (c) { map[c.id] = c.image; });
+  var urls = [];
+  ids.forEach(function (id) {
+    var el = document.getElementById("colImg" + id.charAt(0).toUpperCase() + id.slice(1));
+    if (el && map[id]) {
+      el.src = map[id];
+      urls.push(map[id]);
+    }
+  });
+  prefetchImages(urls);
+}
+
+function applyCategoryHeroFromCollections(cols) {
   var heroEl = document.getElementById("pageHero");
   var bgEl = document.getElementById("pageHeroBg");
   var fgEl = document.getElementById("pageHeroFg");
   if (!heroEl) return;
   var cat = heroEl.getAttribute("data-category");
   if (!cat) return;
-  fsLoadCollections(function (cols) {
-    var match = cols.find(function (c) { return c.id === cat; });
-    if (match && match.image) {
-      if (bgEl) bgEl.style.backgroundImage = "url(" + match.image + ")";
-      if (fgEl) fgEl.style.backgroundImage = "url(" + match.image + ")";
-      heroEl.classList.add("has-bg");
+  var match = cols.find(function (c) { return c.id === cat; });
+  if (match && match.image) {
+    if (bgEl) bgEl.style.backgroundImage = "url(" + match.image + ")";
+    if (fgEl) fgEl.style.backgroundImage = "url(" + match.image + ")";
+    heroEl.classList.add("has-bg");
+    prefetchImages([match.image]);
+  }
+}
+
+function applyCollectionCountsFromProducts(products) {
+  var ids = ["caps", "watches", "perfumes", "tshirts", "wallets"];
+  var counts = {};
+  products.forEach(function (p) {
+    if (p.category) counts[p.category] = (counts[p.category] || 0) + 1;
+  });
+  ids.forEach(function (id) {
+    var el = document.getElementById("colCount" + id.charAt(0).toUpperCase() + id.slice(1));
+    if (el) {
+      var n = counts[id] || 0;
+      el.textContent = n + (n === 1 ? " Style" : (id === "perfumes" ? " Scents" : " Styles"));
     }
+  });
+}
+
+function applySiteBundle(bundle) {
+  if (!bundle) return;
+  if (bundle.products && bundle.products.length && typeof mergeProductCatalog === "function") {
+    mergeProductCatalog(bundle.products);
+  }
+  if (bundle.settings && bundle.settings.heroImage) {
+    var heroBg = document.getElementById("heroBg");
+    var heroSection = document.getElementById("heroSection");
+    if (heroBg && heroSection) {
+      heroBg.style.backgroundImage = "url(" + bundle.settings.heroImage + ")";
+      heroSection.classList.add("has-bg");
+      prefetchImages([bundle.settings.heroImage]);
+    }
+  }
+  if (bundle.collections && bundle.collections.length) {
+    applyCollectionImages(bundle.collections);
+    applyCategoryHeroFromCollections(bundle.collections);
+  }
+  applyCollectionCountsFromProducts(bundle.products || PRODUCTS);
+  prefetchProductImages(bundle.products || PRODUCTS);
+}
+
+function loadCategoryHero() {
+  if (typeof fsLoadCollections === "undefined") return;
+  fsLoadCollections(function (cols) {
+    applyCategoryHeroFromCollections(cols);
   });
 }
 
 function loadHeroImage() {
   if (typeof fsLoadSettings === "undefined") return;
-  var heroBg = document.getElementById("heroBg");
-  var heroSection = document.getElementById("heroSection");
-  if (!heroBg || !heroSection) return;
   fsLoadSettings(function (s) {
     if (s.heroImage) {
-      heroBg.style.backgroundImage = "url(" + s.heroImage + ")";
-      heroSection.classList.add("has-bg");
+      var heroBg = document.getElementById("heroBg");
+      var heroSection = document.getElementById("heroSection");
+      if (heroBg && heroSection) {
+        heroBg.style.backgroundImage = "url(" + s.heroImage + ")";
+        heroSection.classList.add("has-bg");
+        prefetchImages([s.heroImage]);
+      }
     }
   });
 }
 
 function loadCollectionImages() {
   if (typeof fsLoadCollections === "undefined") return;
-  var ids = ["caps", "watches", "perfumes", "tshirts", "wallets"];
   fsLoadCollections(function (cols) {
-    var map = {};
-    cols.forEach(function (c) { map[c.id] = c.image; });
-    ids.forEach(function (id) {
-      var el = document.getElementById("colImg" + id.charAt(0).toUpperCase() + id.slice(1));
-      if (el && map[id]) el.src = map[id];
-    });
+    applyCollectionImages(cols);
   });
-
-  if (typeof db === "undefined") return;
-  db.collection("products").get().then(function (snap) {
-    var counts = {};
-    snap.forEach(function (doc) {
-      var cat = doc.data().category;
-      if (cat) counts[cat] = (counts[cat] || 0) + 1;
-    });
-    ids.forEach(function (id) {
-      var el = document.getElementById("colCount" + id.charAt(0).toUpperCase() + id.slice(1));
-      if (el) {
-        var n = counts[id] || 0;
-        el.textContent = n + (n === 1 ? " Style" : (id === "perfumes" ? " Scents" : " Styles"));
-      }
-    });
-  }).catch(function () {
-    var counts = {};
-    PRODUCTS.forEach(function (p) {
-      counts[p.category] = (counts[p.category] || 0) + 1;
-    });
-    ids.forEach(function (id) {
-      var el = document.getElementById("colCount" + id.charAt(0).toUpperCase() + id.slice(1));
-      if (el) {
-        var n = counts[id] || 0;
-        el.textContent = n + (n === 1 ? " Style" : (id === "perfumes" ? " Scents" : " Styles"));
-      }
-    });
-  });
+  applyCollectionCountsFromProducts(PRODUCTS);
 }
