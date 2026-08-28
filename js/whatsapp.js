@@ -1,6 +1,6 @@
 /* Floating WhatsApp button — shared across all pages */
 (function () {
-  var PHONE = "923226806286";
+  var PHONE = "923256646684";
   var DEFAULT_MESSAGE = "I want to order this product.";
 
   function buildMessage(productName) {
