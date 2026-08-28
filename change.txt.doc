@@ -1,1 +1,175 @@
-npm install -g firebase-tools
+I need you to fix the **main header navigation/menu system** of my website.
+
+### Websites to use as reference
+
+My current website:
+https://gentify-essentials.vercel.app/index.html
+
+Reference website whose header/navigation behavior I want:
+https://askri-fragrances.vercel.app/
+
+### Main goal
+
+Inspect my existing Gentify Essentials codebase and completely fix the **main menu/navigation in the header**.
+
+I want the navigation to work smoothly and reliably like the Askri Fragrances website.
+
+Do NOT redesign my entire website. Do NOT change my existing branding, products, content, colors, sections, footer, or overall design unless it is absolutely necessary for fixing navigation.
+
+### Current Gentify navigation
+
+The header currently contains:
+
+* GENTIFY logo
+* Home
+* Caps
+* Watches
+* Perfumes
+* T-Shirts
+* Wallets
+* About
+* Returns
+* Sign in
+* Admin Panel
+* Sign out
+* Cart
+
+The main problem is that the header menu/pages are not working properly.
+
+### What I want you to do
+
+1. **Inspect the complete project first**
+
+   * Identify the framework/build setup.
+   * Find the header/navbar component.
+   * Find all existing pages/routes.
+   * Check how navigation is currently implemented.
+   * Do not assume the problem; diagnose the actual issue.
+
+2. **Fix every main navigation link**
+
+   Each menu item must correctly navigate to its corresponding page:
+
+   * Home → homepage
+   * Caps → Caps page
+   * Watches → Watches page
+   * Perfumes → Perfumes page
+   * T-Shirts → T-Shirts page
+   * Wallets → Wallets page
+   * About → About page
+   * Returns → Returns page
+
+3. **Make navigation work correctly on direct URLs**
+
+   If the project uses client-side routing, make sure routes work when:
+
+   * Clicking the navigation item
+   * Refreshing the page
+   * Opening the URL directly
+   * Using browser back/forward buttons
+
+4. **Use the Askri website as the navigation UX reference**
+
+   Reference:
+   https://askri-fragrances.vercel.app/
+
+   Follow its clean navigation approach:
+
+   * Simple header navigation
+   * Clear clickable links
+   * Correct page transitions
+   * No broken links
+   * No unnecessary page reloads if the framework supports SPA routing
+   * Consistent header across pages
+
+5. **Fix active/current page state**
+
+   The currently opened page should have a clear active/selected navigation state if this is consistent with the existing design.
+
+6. **Fix mobile navigation too**
+
+   If Gentify has a responsive/mobile header:
+
+   * Make sure the hamburger/menu button works.
+   * Menu opens and closes correctly.
+   * Clicking a page closes the mobile menu.
+   * Clicking outside/close button should close it where appropriate.
+   * No links should be hidden or unclickable.
+   * Make sure the mobile header does not break the desktop header.
+
+7. **Do NOT create duplicate pages**
+
+   Before creating anything, inspect the existing project and reuse existing pages/components/routes wherever possible.
+
+8. **Do NOT replace working functionality**
+
+   Preserve:
+
+   * Authentication/sign-in
+   * Admin Panel
+   * Sign out
+   * Cart
+   * Product functionality
+   * Existing styling
+   * Existing data
+   * Existing footer
+   * Existing responsive design
+
+   Only modify what is necessary to make navigation work correctly.
+
+9. **Check all internal links**
+
+   Also inspect buttons/cards/collection links throughout the homepage and make sure they point to the correct existing pages.
+
+10. **Avoid hardcoded broken paths**
+
+Use the routing system already used by the project. If the project is using React Router, Next.js routing, plain HTML pages, or another system, follow the appropriate approach for that framework.
+
+11. **Important: preserve the existing design**
+
+I want the **functionality and navigation behavior** improved, not a completely new website.
+
+### Testing requirements
+
+After making the changes, test every navigation item.
+
+Test:
+
+* Home
+* Caps
+* Watches
+* Perfumes
+* T-Shirts
+* Wallets
+* About
+* Returns
+
+Also test:
+
+* Desktop navigation
+* Mobile navigation
+* Browser refresh on every page
+* Direct URL access
+* Browser back button
+* Browser forward button
+* Logo → Home
+* Homepage collection links
+* Footer navigation links
+
+Check the browser console for JavaScript errors and fix any navigation-related errors.
+
+### Final requirement
+
+Do not just tell me what is wrong.
+
+**Actually modify the codebase and implement the complete fix.**
+
+After finishing, give me a short summary containing:
+
+1. What caused the navigation problem
+2. Which files you changed
+3. What you fixed
+4. How you tested the navigation
+5. Any remaining issues, if there are any
+
+Keep the existing Gentify Essentials website design intact and make the navigation reliable and professional, using the Askri Fragrances website as the UX/reference for the header navigation.

@@ -153,33 +153,76 @@ function initAccordion(){
   });
 }
 
-/* ---------------- Global nav / drawer / modal wiring ---------------- */
+/* ===================== Mobile Drawer ===================== */
+function injectMobileDrawer(){
+  if(document.getElementById("mobileDrawer")) return;
+  var navLinks = document.getElementById("navLinks");
+  if(!navLinks) return;
+
+  /* Build drawer HTML */
+  var links = [];
+  navLinks.querySelectorAll("a").forEach(function(a){
+    var cls = a.classList.contains("active") ? " active" : "";
+    links.push('<a href="' + a.getAttribute("href") + '" class="' + cls + '">' + a.textContent.trim() + '</a>');
+  });
+
+  var drawer = document.createElement("div");
+  drawer.className = "mobile-drawer";
+  drawer.id = "mobileDrawer";
+  drawer.innerHTML =
+    '<button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Close menu">&times;</button>' +
+    '<div class="mobile-drawer-logo">GENTIFY<span class="dot">.</span></div>' +
+    '<nav>' + links.join("") + '</nav>' +
+    '<div class="mobile-drawer-auth" id="mobileDrawerAuth"></div>';
+
+  var overlay = document.createElement("div");
+  overlay.className = "mobile-overlay";
+  overlay.id = "mobileOverlay";
+
+  document.body.appendChild(drawer);
+  document.body.appendChild(overlay);
+
+  if (typeof window.updateMobileAuth === "function") window.updateMobileAuth();
+
+  /* Wire events */
+  document.getElementById("mobileDrawerClose").addEventListener("click", closeMobileDrawer);
+  overlay.addEventListener("click", closeMobileDrawer);
+
+  drawer.querySelectorAll("nav a").forEach(function(link){
+    link.addEventListener("click", closeMobileDrawer);
+  });
+}
+
+function openMobileDrawer(){
+  injectMobileDrawer();
+  if (typeof window.updateMobileAuth === "function") window.updateMobileAuth();
+  document.getElementById("mobileDrawer").classList.add("open");
+  document.getElementById("mobileOverlay").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function closeMobileDrawer(){
+  var drawer = document.getElementById("mobileDrawer");
+  var overlay = document.getElementById("mobileOverlay");
+  if(drawer) drawer.classList.remove("open");
+  if(overlay) overlay.classList.remove("show");
+  document.body.style.overflow = "";
+}
+
+function toggleMobileDrawer(){
+  var drawer = document.getElementById("mobileDrawer");
+  if(drawer && drawer.classList.contains("open")){
+    closeMobileDrawer();
+  } else {
+    openMobileDrawer();
+  }
+}
+
+/* ===================== Global nav / drawer / modal wiring ===================== */
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menuToggle");
-  const navLinks = document.getElementById("navLinks");
-  if(menuToggle && navLinks){
-    /* Add close button inside mobile nav */
-    var closeBtn = document.createElement("button");
-    closeBtn.className = "nav-close";
-    closeBtn.innerHTML = "&times;";
-    closeBtn.setAttribute("aria-label", "Close menu");
-    navLinks.prepend(closeBtn);
-
-    function closeMobileMenu(){
-      navLinks.classList.remove("open");
-      menuToggle.classList.remove("active");
-    }
-
-    menuToggle.addEventListener("click", () => {
-      navLinks.classList.toggle("open");
-      menuToggle.classList.toggle("active");
-    });
-
-    closeBtn.addEventListener("click", closeMobileMenu);
-
-    navLinks.querySelectorAll("a").forEach(link => {
-      link.addEventListener("click", closeMobileMenu);
-    });
+  if(menuToggle){
+    menuToggle.addEventListener("click", toggleMobileDrawer);
   }
 
   const cartBtn = document.getElementById("cartBtn");
@@ -199,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.addEventListener("keydown", (e) => {
-    if(e.key === "Escape"){ closeCartDrawer(); closeQuickView(); }
+    if(e.key === "Escape"){ closeCartDrawer(); closeQuickView(); closeMobileDrawer(); }
   });
 
   initAccordion();

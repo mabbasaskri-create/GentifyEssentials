@@ -118,10 +118,7 @@ header.site-header{
   display:flex; align-items:center; justify-content:center;
 }
 .menu-toggle{ display:none; background:none; border:none; padding:4px; }
-.menu-toggle span{ display:block; width:24px; height:2px; background:var(--navy); margin:5px 0; transition:.3s; transform-origin:center; }
-.menu-toggle.active span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
-.menu-toggle.active span:nth-child(2){ opacity:0; transform:scaleX(0); }
-.menu-toggle.active span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+.menu-toggle span{ display:block; width:24px; height:2px; background:var(--navy); margin:5px 0; transition:.3s; }
 .nav-close{ display:none; }
 
 /* ---------- Google Sign-In ---------- */
@@ -170,17 +167,16 @@ header.site-header{
 .google-dropdown-admin:hover{ background:var(--ivory-2); }
 .google-dropdown-admin.show{ display:block; }
 
-@media (max-width: 920px){
+@media (max-width: 1080px){
   .google-auth{ margin-top:10px; }
   .google-user-dropdown{ right:auto; left:0; }
+  /* Hide desktop nav on mobile/tablet — desktop nav overflows and clips
+     the Sign in / Cart controls below ~1080px, so the hamburger drawer
+     takes over first (see breakpoint.js testing). */
   .nav-links{
-    position:fixed; top:0; left:0; right:0; bottom:0; background:var(--ivory); flex-direction:column;
-    justify-content:flex-start; padding:90px 28px 36px; gap:20px; transform:translateX(100%);
-    transition:transform .35s ease; overflow-y:auto; z-index:100;
+    display:none !important;
   }
-  .nav-links.open{ transform:translateX(0); }
-  .nav-links a{ font-size:16px; padding:10px 0; border-bottom:1px solid var(--line); }
-  .menu-toggle{ display:block; }
+  .menu-toggle{ display:flex; }
 }
 
 /* ---------- Hero ---------- */
@@ -601,6 +597,59 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
    MOBILE RESPONSIVE — comprehensive breakpoints
    ========================================================================== */
 
+/* ---------- Mobile Drawer (slides from right, like askri) ---------- */
+.mobile-drawer{
+  position:fixed; top:0; right:-100%; width:82%; max-width:340px; height:100vh;
+  background:var(--ivory); border-left:1px solid var(--line); z-index:200;
+  transition:right .4s ease; padding:24px; overflow-y:auto;
+  display:flex; flex-direction:column;
+}
+.mobile-drawer.open{ right:0; }
+.mobile-drawer-close{
+  position:absolute; top:16px; right:16px; background:none; border:none;
+  font-size:24px; color:var(--navy); width:40px; height:40px;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:2;
+}
+.mobile-drawer-close:hover{ color:var(--gold); }
+.mobile-drawer-logo{
+  font-family:var(--ff-display); font-size:22px; letter-spacing:.04em;
+  color:var(--navy); font-weight:700; padding:8px 0 24px;
+  border-bottom:1px solid var(--line); margin-bottom:8px;
+}
+.mobile-drawer-logo .dot{ color:var(--gold); }
+.mobile-drawer nav{ flex:1; }
+.mobile-drawer nav a{
+  display:block; padding:16px 4px; color:var(--navy); text-transform:uppercase;
+  letter-spacing:.1em; font-size:14px; font-weight:600;
+  border-bottom:1px solid var(--line); transition:color .2s;
+}
+.mobile-drawer nav a:hover,
+.mobile-drawer nav a.active{ color:var(--gold); }
+.mobile-drawer-auth{ padding-top:16px; border-top:1px solid var(--line); margin-top:auto; }
+.mobile-drawer-auth .google-signin-btn{ width:100%; justify-content:center; font-size:13px; padding:12px; }
+.mobile-user{ display:flex; align-items:center; gap:12px; padding-bottom:14px; }
+.mobile-user-avatar{
+  width:40px; height:40px; border-radius:50%; border:2px solid var(--gold);
+  background:var(--navy); color:var(--ivory); display:flex; align-items:center;
+  justify-content:center; font-family:var(--ff-display); font-size:15px; font-weight:700;
+  flex-shrink:0;
+}
+.mobile-user-name{
+  font-size:14px; font-weight:600; color:var(--navy);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.mobile-drawer-signout{ margin-top:4px; width:100%; }
+.mobile-overlay{
+  position:fixed; inset:0; background:rgba(11,31,58,.55); z-index:150;
+  opacity:0; visibility:hidden; transition:.35s;
+}
+.mobile-overlay.show{ opacity:1; visibility:visible; }
+
+/* Hide mobile drawer on desktop */
+@media (min-width:1081px){
+  .mobile-drawer, .mobile-overlay{ display:none !important; }
+}
+
 /* ---- Tablet & below (≤768px) ---- */
 @media (max-width:768px){
   /* Header */
@@ -613,21 +662,9 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
   .google-signin-btn svg{ margin:0; }
   .nav-actions{ gap:12px; }
 
-  /* Hamburger — bigger tap target */
-  .menu-toggle{ display:block; padding:6px; }
-  .menu-toggle span{ width:22px; margin:4px 0; }
-
-  /* Mobile nav — reduce top padding for smaller header */
-  .nav-links{ padding:76px 20px 36px; }
-
-  /* Mobile nav close button */
-  .nav-close{
-    display:flex; position:absolute; top:14px; right:16px;
-    background:none; border:none; width:40px; height:40px;
-    align-items:center; justify-content:center; font-size:28px;
-    color:var(--navy); cursor:pointer; z-index:2;
-  }
-  .nav-close:hover{ color:var(--gold); }
+  /* Hamburger */
+  .menu-toggle{ display:flex; flex-direction:column; gap:4px; padding:6px; }
+  .menu-toggle span{ width:22px; height:2px; background:var(--navy); transition:.3s; }
 
   /* Announcement bar */
   .announce{ font-size:10px; padding:7px 8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -669,9 +706,8 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
   .nav-actions{ gap:8px; }
   .google-auth{ display:none; }
 
-  /* Hamburger bigger on mobile */
+  /* Hamburger */
   .menu-toggle{ padding:8px; }
-  .menu-toggle span{ width:24px; height:2.5px; margin:5px 0; }
 
   /* Announcement */
   .announce{ font-size:9px; letter-spacing:.08em; }
@@ -698,8 +734,8 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
   /* Perks */
   .perks{ padding:28px 0; }
 
-  /* Product grid */
-  .grid-products{ gap:14px 10px; }
+  /* Product grid — always 2 per row */
+  .grid-products{ grid-template-columns:1fr 1fr; gap:14px 10px; }
   .card-body{ padding:12px 12px 14px; gap:5px; }
   .card-name{ font-size:15px; }
   .card-rating{ font-size:11px; }
