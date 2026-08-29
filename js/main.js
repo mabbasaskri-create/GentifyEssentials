@@ -13,15 +13,15 @@ function productCard(p){
   const url = "product.html?id=" + encodeURIComponent(p.id);
   return `
   <article class="card" data-id="${p.id}">
-    <a class="card-media" href="${url}" title="View ${p.name}">
+    <div class="card-media">
       ${badge}
-      <img src="${p.image}" alt="${p.name}" loading="lazy">
-      <div class="card-quick">Buy Now</div>
-    </a>
+      <a href="${url}" title="View ${p.name}"><img src="${p.image}" alt="${p.name}" loading="lazy"></a>
+      <button class="card-quick" type="button" onclick="addToCart('${p.id}', 1)">Add to Cart</button>
+    </div>
     <div class="card-body">
       <div class="card-cat">${CATEGORY_META[p.category].label}</div>
       <a class="card-name" href="${url}">${p.name}</a>
-      <div class="card-rating">${starString(p.rating)} <span>(${p.reviews || 0})</span></div>
+      <div class="card-rating">${starString(p.rating)} <span>(${productReviewCount(p)})</span></div>
       <div class="price-row">
         <span class="price">${formatPKR(p.price)}</span>
         ${oldPrice}

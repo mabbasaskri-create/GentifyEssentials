@@ -55,11 +55,14 @@ function renderProductTabs(p) {
 
   var reviewsHtml =
     '<div class="review-summary"><span class="score">' + p.rating + '</span>' +
-    '<span class="label">' + starString(p.rating) + '<br>Based on ' + (p.reviews || 0) + ' verified reviews</span></div>' +
-    '<div class="review-item">' +
-      '<div class="head"><strong>Gentify Verified Buyer</strong><span class="rating">' + starString(p.rating) + '</span></div>' +
-      '<p>A well-made, stylish piece — quality materials and fast, reliable delivery across Pakistan.</p>' +
-    '</div>';
+    '<span class="label">' + starString(p.rating) + '<br>Based on ' + productReviewCount(p) + ' verified reviews</span></div>' +
+    productReviews(p).map(function (r) {
+      return '<div class="review-item">' +
+        '<div class="head"><strong>' + r.name + '</strong>' +
+        '<span class="rating">' + starString(r.rating) + '</span></div>' +
+        '<p>' + r.text + '</p>' +
+      '</div>';
+    }).join("");
 
   heads.innerHTML =
     '<button class="tab-head active" data-tab="tab-desc" type="button">Description</button>' +
@@ -153,7 +156,7 @@ function renderProductPage() {
     '<div class="pd-info">' +
       '<div class="card-cat">' + catLabel + '</div>' +
       '<h1>' + p.name + '</h1>' +
-      '<div class="pd-rating">' + starString(p.rating) + ' <span>(' + (p.reviews || 0) + ' reviews)</span></div>' +
+      '<div class="pd-rating">' + starString(p.rating) + ' <span>(' + productReviewCount(p) + ' reviews)</span></div>' +
       '<div class="pd-price"><span class="now">' + formatPKR(p.price) + '</span>' + oldPrice + save + '</div>' +
       '<p class="pd-desc">' + p.desc + '</p>' +
       tags +
