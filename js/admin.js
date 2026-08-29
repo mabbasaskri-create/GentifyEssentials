@@ -179,7 +179,7 @@ function handleProductSubmit(e) {
   var urlImages = images.filter(function (src) { return src.indexOf("data:") !== 0; });
 
   if (base64Images.length === 0) {
-    data.image = images.length > 0 ? images[0] : "https://placehold.co/600x600/0B1F3A/D8BD84?font=playfair-display&text=Product";
+    data.image = images.length > 0 ? images[0] : "img/col-caps.svg";
     data.images = images;
     saveProductData(data, submitBtn);
     return;
@@ -272,11 +272,11 @@ function handleHeroImage(e) {
 
 function loadCollections() {
   var defaults = {
-    caps:     "https://placehold.co/500x650/0B1F3A/D8BD84?font=playfair-display&text=Caps",
-    watches:  "https://placehold.co/500x650/232323/F6F2E9?font=playfair-display&text=Watches",
-    perfumes: "https://placehold.co/500x650/16294A/B8923F?font=playfair-display&text=Perfumes",
-    tshirts:  "https://placehold.co/500x650/2B2B2B/F6F2E9?font=playfair-display&text=T-Shirts",
-    wallets:  "https://placehold.co/500x650/1A1A1A/D8BD84?font=playfair-display&text=Wallets"
+    caps:     "img/col-caps.svg",
+    watches:  "img/col-watches.svg",
+    perfumes: "img/col-perfumes.svg",
+    tshirts:  "img/col-tshirts.svg",
+    wallets:  "img/col-wallets.svg"
   };
   fsLoadCollections(function (cols) {
     cols.forEach(function (c) {

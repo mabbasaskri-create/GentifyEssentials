@@ -42,7 +42,7 @@ function renderCheckout() {
     return;
   }
 
-  var subtotal = cartTotal();
+  var subtotal = lines.reduce(function (s, l) { return s + l.product.price * l.qty; }, 0);
   var shipping = checkoutShipping(subtotal);
   var total = subtotal + shipping;
 
@@ -186,7 +186,7 @@ function placeOrderNow() {
   var province = checkoutField("coProvince");
   var notes = checkoutField("coNotes");
 
-  var subtotal = cartTotal();
+  var subtotal = lines.reduce(function (s, l) { return s + l.product.price * l.qty; }, 0);
   var shipping = checkoutShipping(subtotal);
   var total = subtotal + shipping;
 
