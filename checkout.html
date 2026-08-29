@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Gentify Essentials</title>
+<meta name="description" content="Complete your order at Gentify Essentials — Cash on Delivery across Pakistan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://firestore.googleapis.com">
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="announce">Free shipping on all orders over Rs. 5,000 — across Pakistan</div>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a href="index.html" class="logo">GENTIFY<span class="dot">.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="caps.html">Caps</a>
+      <a href="watches.html">Watches</a>
+      <a href="perfumes.html">Perfumes</a>
+      <a href="tshirts.html">T-Shirts</a>
+      <a href="wallets.html">Wallets</a>
+      <a href="about.html">About</a>
+      <a href="returns.html">Returns</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="google-auth" id="googleAuth">
+        <div class="google-auth-signedout" id="googleSignInBtn">
+          <button class="google-signin-btn" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Sign in
+          </button>
+        </div>
+        <div class="google-auth-signedin" id="googleUserInfo" style="display:none;">
+          <div class="google-user-menu">
+            <button class="google-user-avatar" id="googleAvatarBtn" type="button">
+              <span class="google-user-letter" id="googleUserLetter"></span>
+            </button>
+            <div class="google-user-dropdown" id="googleUserDropdown">
+              <div class="google-dropdown-name" id="googleDropdownName"></div>
+              <button class="google-dropdown-signout" id="googleSignOutBtn" type="button">Sign out</button>
+              <button class="google-dropdown-admin" id="googleAdminLink" type="button">★ Admin Panel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-count">0</span>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<section class="checkout-page">
+  <div class="wrap">
+    <nav class="product-breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><span class="current">Checkout</span></nav>
+    <div class="checkout-head">
+      <h1>Checkout</h1>
+      <p>Cash on Delivery — pay simply and safely when your order arrives at your door.</p>
+    </div>
+    <div id="checkoutContent"></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">GENTIFY<span class="dot">.</span></div>
+        <p class="footer-about">Premium caps, watches, perfumes, tees and wallets for the modern gentleman. Handpicked quality, shipped across Pakistan.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="caps.html">Caps</a></li>
+          <li><a href="watches.html">Watches</a></li>
+          <li><a href="perfumes.html">Perfumes</a></li>
+          <li><a href="tshirts.html">T-Shirts</a></li>
+          <li><a href="wallets.html">Wallets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="returns.html">Returns</a></li>
+          <li><a href="https://wa.me/923256646684" target="_blank">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="returns.html">Shipping Info</a></li>
+          <li><a href="returns.html">Returns Policy</a></li>
+          <li><a href="returns.html">Size Guide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Gentify Essentials. All rights reserved.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="overlay" id="cartOverlay"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="drawer-close" id="drawerClose">&times;</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/whatsapp.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

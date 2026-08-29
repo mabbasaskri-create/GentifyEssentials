@@ -91,41 +91,7 @@ function renderCartDrawer(){
 
   if(foot) foot.innerHTML =
     '<div class="drawer-total"><span>Total</span><span>' + formatPKR(cartTotal()) + '</span></div>' +
-    '<button class="btn btn-primary btn-block" onclick="checkoutWhatsApp()">Proceed to Checkout →</button>';
-}
-
-function checkoutWhatsApp(){
-  var lines = cartLines();
-  if(lines.length === 0) return;
-
-  var orderItems = lines.map(function(l){
-    return { id: l.product.id, name: l.product.name, qty: l.qty, price: l.product.price };
-  });
-
-  var orderData = {
-    items: orderItems,
-    total: cartTotal(),
-    status: "pending",
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-  };
-
-  fsSaveOrder(orderData).then(function(){
-    console.log("Order saved to Firestore");
-  }).catch(function(e){
-    console.error("Order save error:", e);
-  });
-
-  var msg = "Hello Gentify Essentials, I'd like to place an order:%0A%0A";
-  lines.forEach(function(l){
-    msg += "• " + l.product.name + " x" + l.qty + " — " + formatPKR(l.product.price * l.qty) + "%0A";
-  });
-  msg += "%0ATotal: " + formatPKR(cartTotal());
-  window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + msg, "_blank");
-
-  localStorage.removeItem(CART_KEY);
-  updateCartCount();
-  renderCartDrawer();
-  closeCartDrawer();
+    '<a class="btn btn-primary btn-block" href="checkout.html">Proceed to Checkout →</a>';
 }
 
 function openCartDrawer(){
