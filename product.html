@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Perfumes — Gentify Essentials</title>
-<meta name="description" content="Shop Perfumes at Gentify Essentials — Layered, long-lasting fragrances in 100ml Eau de Parfum and Eau de Toilette.">
+<title>Product — Gentify Essentials</title>
+<meta name="description" content="View product details at Gentify Essentials — premium caps, watches, perfumes, tees and wallets for the modern gentleman.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -23,7 +23,7 @@
       <a href="index.html">Home</a>
       <a href="caps.html">Caps</a>
       <a href="watches.html">Watches</a>
-      <a href="perfumes.html" class="active">Perfumes</a>
+      <a href="perfumes.html">Perfumes</a>
       <a href="tshirts.html">T-Shirts</a>
       <a href="wallets.html">Wallets</a>
       <a href="about.html">About</a>
@@ -59,34 +59,29 @@
   </div>
 </header>
 
-<section class="page-hero" id="pageHero" data-category="perfumes">
-  <div class="page-hero-bg" id="pageHeroBg"></div>
-  <div class="page-hero-fg" id="pageHeroFg"></div>
+<section class="product-section">
   <div class="wrap">
-    <h1>Perfumes</h1>
+    <nav class="product-breadcrumb" id="productBreadcrumb"></nav>
+    <div class="product-detail" id="productDetail"></div>
   </div>
 </section>
 
-<section>
+<section class="pd-tabs-section section-alt" id="pdTabsSection">
   <div class="wrap">
-    <div class="filter-bar">
-      <div class="filter-group">
-        <button class="chip active" data-filter="all">All</button>
-        <button class="chip" data-filter="bestseller">Bestsellers</button>
-        <button class="chip" data-filter="new">New Arrivals</button>
-        <button class="chip" data-filter="sale">On Sale</button>
-      </div>
-      <div style="display:flex; align-items:center; gap:18px;">
-        <span class="result-count" id="resultCount"></span>
-        <select class="sort-select" id="sortSelect">
-          <option value="featured">Featured</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="rating">Top Rated</option>
-        </select>
-      </div>
+    <div class="pd-tabs">
+      <div class="tab-heads" id="tabHeads"></div>
+      <div class="tab-bodies" id="tabBodies"></div>
     </div>
-    <div class="grid-products" id="productGrid"></div>
+  </div>
+</section>
+
+<section class="related-section" id="relatedSection">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Complete your look</span>
+      <h2>Related Products</h2>
+    </div>
+    <div class="grid-products" id="relatedGrid"></div>
   </div>
 </section>
 
@@ -144,7 +139,6 @@
 
 <div class="toast" id="toast"></div>
 
-
 <script src="js/products.js"></script>
 <script src="js/cart.js"></script>
 <script src="js/main.js"></script>
@@ -153,18 +147,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/whatsapp.js"></script>
-<script>
-  function refreshCategory(list) {
-    mergeProductCatalog(list);
-    initCategoryPage("perfumes");
-    if (typeof prefetchProductImages === "function") prefetchProductImages(PRODUCTS);
-  }
-  if (typeof cacheGet === "function") {
-    var cachedProducts = cacheGet("products");
-    if (cachedProducts && cachedProducts.length) mergeProductCatalog(cachedProducts);
-  }
-  initCategoryPage("perfumes");
-  fsLoadProducts(refreshCategory, refreshCategory);
-</script>
+<script src="js/product.js"></script>
 </body>
 </html>

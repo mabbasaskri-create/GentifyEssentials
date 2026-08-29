@@ -469,6 +469,123 @@ footer.site-footer{ background:var(--navy); color:rgba(246,242,233,.75); padding
 .badge-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
 .mini-badge{ font-size:11px; letter-spacing:.08em; text-transform:uppercase; border:1px solid var(--line); padding:6px 12px; color:var(--navy); }
 
+/* ---------- Product detail page ---------- */
+.product-section{ padding:0 0 20px; }
+.product-breadcrumb{
+  display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:#7c8797;
+  padding:34px 0 0;
+}
+.product-breadcrumb a{ color:var(--navy); font-weight:600; transition:color .2s; }
+.product-breadcrumb a:hover{ color:var(--gold); }
+.product-breadcrumb .sep{ color:#9aa3ad; }
+.product-breadcrumb .current{ color:var(--gold); font-weight:600; }
+
+.product-detail{
+  display:grid; grid-template-columns:1.05fr 1fr; gap:56px;
+  padding:34px 0 64px; align-items:start;
+}
+
+.pd-gallery{ background:var(--white); border:1px solid var(--line); position:relative; }
+.pd-gallery .card-badge{ z-index:2; }
+.pd-main{ position:relative; aspect-ratio:1/1; overflow:hidden; background:var(--ivory-2); }
+.pd-main img{ width:100%; height:100%; object-fit:cover; }
+.pd-thumbs{ display:flex; gap:10px; padding:12px; }
+.pd-thumb{
+  width:86px; aspect-ratio:1/1; border:1px solid var(--line); cursor:pointer;
+  object-fit:cover; opacity:.6; transition:all .25s ease; background:var(--ivory-2);
+}
+.pd-thumb:hover{ opacity:1; }
+.pd-thumb.active{ border-color:var(--gold); opacity:1; }
+
+.pd-info{ display:flex; flex-direction:column; }
+.pd-info .card-cat{ font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); font-weight:700; }
+.pd-info h1{ font-size:clamp(28px,3.4vw,40px); margin-top:6px; line-height:1.15; }
+.pd-rating{ margin-top:14px; font-size:13px; color:var(--gold); letter-spacing:1px; }
+.pd-rating span{ color:#9aa3ad; margin-left:8px; letter-spacing:0; font-size:12.5px; }
+.pd-price{ display:flex; align-items:center; gap:14px; margin-top:20px; flex-wrap:wrap; }
+.pd-price .now{ font-family:var(--ff-display); font-size:34px; font-weight:700; color:var(--navy); }
+.pd-price .old{ font-size:17px; color:#9aa3ad; text-decoration:line-through; }
+.pd-price .save{
+  font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+  background:var(--gold); color:var(--navy); padding:4px 10px;
+}
+.pd-desc{ margin-top:22px; color:#4b5768; font-size:15px; line-height:1.7; }
+.pd-sizes{ margin-top:26px; }
+.pd-sizes h4{
+  font-family:var(--ff-body); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+  font-weight:700; color:var(--navy); margin-bottom:12px;
+}
+.size-badge{
+  display:inline-block; font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+  border:1px solid var(--navy); padding:8px 16px; color:var(--navy); margin:0 8px 8px 0;
+}
+.pd-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; }
+.pd-tag{ font-size:10px; letter-spacing:.1em; text-transform:uppercase; background:var(--navy); color:var(--gold-soft); padding:5px 10px; }
+
+.pd-buy{ display:flex; gap:12px; margin-top:26px; align-items:stretch; }
+.pd-buy .qty{ display:flex; align-items:center; border:1px solid var(--navy); background:var(--white); }
+.pd-buy .qty button{ width:44px; height:48px; background:none; border:none; font-size:18px; color:var(--navy); transition:all .2s; }
+.pd-buy .qty button:hover{ background:var(--navy); color:var(--ivory); }
+.pd-buy .qty .qty-val{ font-family:var(--ff-display); font-size:18px; min-width:34px; text-align:center; color:var(--navy); }
+.pd-buy .btn{ flex:1; height:48px; padding:0 18px; }
+.pd-meta{
+  margin-top:28px; border-top:1px solid var(--line); padding-top:20px;
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+.pd-meta p{ margin:0; font-size:12.5px; color:#7c8797; }
+.pd-meta strong{ color:var(--navy); margin-right:8px; font-weight:600; }
+
+/* Product detail tabs */
+.pd-tabs-section{ padding:56px 0 0; }
+.pd-tabs{ background:var(--white); border:1px solid var(--line); }
+.tab-heads{ display:flex; border-bottom:1px solid var(--line); }
+.tab-head{
+  flex:1; background:none; border:none; padding:18px; font-size:12px; letter-spacing:.12em;
+  text-transform:uppercase; font-weight:700; color:#7c8797; border-bottom:2px solid transparent;
+  transition:color .2s ease;
+}
+.tab-head:hover{ color:var(--navy); }
+.tab-head.active{ color:var(--navy); border-bottom-color:var(--gold); }
+.tab-body{ display:none; padding:34px; color:#4b5768; font-size:14.5px; line-height:1.75; }
+.tab-body.active{ display:block; }
+.tab-body p{ margin:0 0 8px; }
+.review-summary{
+  display:flex; align-items:center; gap:18px; margin-bottom:16px; padding:18px;
+  background:var(--ivory-2); border:1px solid var(--line);
+}
+.review-summary .score{ font-family:var(--ff-display); font-size:42px; line-height:1; color:var(--navy); }
+.review-summary .label{ font-size:12px; color:#7c8797; line-height:1.6; }
+.review-summary .label .stars{ color:var(--gold); letter-spacing:1px; }
+.review-item{ border-bottom:1px solid var(--line); padding:16px 0; }
+.review-item:last-child{ border-bottom:none; }
+.review-item .head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; gap:10px; }
+.review-item .head strong{ color:var(--navy); font-size:14px; }
+.review-item .rating{ color:var(--gold); font-size:12px; letter-spacing:1px; }
+.review-item p{ margin:0; font-size:13.5px; }
+
+/* Related */
+.related-section{ padding:80px 0 60px; }
+.related-section .section-head{ margin-bottom:32px; }
+
+@media (max-width:900px){
+  .product-detail{ grid-template-columns:1fr; gap:32px; padding-bottom:48px; }
+  .pd-thumbs{ padding:10px; }
+  .pd-thumb{ width:70px; }
+}
+@media (max-width:480px){
+  .product-breadcrumb{ padding-top:24px; }
+  .pd-buy{ flex-wrap:wrap; }
+  .pd-buy .qty{ flex:1 1 100%; }
+  .pd-buy .qty button{ flex:1; }
+  .pd-buy .btn{ height:46px; }
+  .pd-meta{ grid-template-columns:1fr; }
+  .pd-price .now{ font-size:28px; }
+  .tab-head{ padding:14px 10px; font-size:11px; }
+  .tab-body{ padding:22px 18px; }
+  .related-section{ padding-top:40px; }
+}
+
 /* ---------- Admin Panel ---------- */
 .admin-access-denied{
   text-align:center; padding:100px 20px;

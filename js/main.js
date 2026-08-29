@@ -10,24 +10,25 @@ function starString(rating){
 function productCard(p){
   const badge = p.badge ? `<span class="card-badge ${p.badge === 'Sale' ? 'sale' : ''}">${p.badge}</span>` : "";
   const oldPrice = p.oldPrice ? `<span class="price-old">${formatPKR(p.oldPrice)}</span>` : "";
+  const url = "product.html?id=" + encodeURIComponent(p.id);
   return `
   <article class="card" data-id="${p.id}">
-    <div class="card-media" onclick="openQuickView('${p.id}')">
+    <a class="card-media" href="${url}" title="View ${p.name}">
       ${badge}
       <img src="${p.image}" alt="${p.name}" loading="lazy">
-      <div class="card-quick">Quick View</div>
-    </div>
+      <div class="card-quick">Buy Now</div>
+    </a>
     <div class="card-body">
       <div class="card-cat">${CATEGORY_META[p.category].label}</div>
-      <div class="card-name">${p.name}</div>
+      <a class="card-name" href="${url}">${p.name}</a>
       <div class="card-rating">${starString(p.rating)} <span>(${p.reviews || 0})</span></div>
       <div class="price-row">
         <span class="price">${formatPKR(p.price)}</span>
         ${oldPrice}
       </div>
       <div class="card-actions">
-        <button class="btn btn-outline" onclick="openQuickView('${p.id}')">Quick View</button>
-        <button class="btn btn-primary" onclick="addToCart('${p.id}', 1)">Add to Cart</button>
+        <a class="btn btn-primary" href="${url}">Buy Now</a>
+        <button class="btn btn-outline" onclick="addToCart('${p.id}', 1)">Add to Cart</button>
       </div>
     </div>
   </article>`;
@@ -39,51 +40,6 @@ function renderGrid(containerId, list){
   el.innerHTML = list.length
     ? list.map(productCard).join("")
     : `<div class="no-results">No products match these filters just yet — try a different combination.</div>`;
-}
-
-/* ---------------- Quick view modal ---------------- */
-let quickViewQty = 1;
-let quickViewId = null;
-
-function openQuickView(id){
-  const p = findProduct(id);
-  if(!p) return;
-  quickViewId = id;
-  quickViewQty = 1;
-  const oldPrice = p.oldPrice ? `<span class="price-old">${formatPKR(p.oldPrice)}</span>` : "";
-  const sizes = p.sizes ? `<div class="badge-row">${p.sizes.map(s => `<span class="mini-badge">${s}</span>`).join("")}</div>` : "";
-  document.getElementById("modalBody").innerHTML = `
-    <div class="modal-media"><img src="${p.image}" alt="${p.name}"></div>
-    <div class="modal-info">
-      <div class="card-cat">${CATEGORY_META[p.category].label}</div>
-      <h2>${p.name}</h2>
-      <div class="card-rating">${starString(p.rating)} <span>(${p.reviews || 0} reviews)</span></div>
-      <div class="price-row"><span class="price">${formatPKR(p.price)}</span>${oldPrice}</div>
-      <p class="modal-desc">${p.desc}</p>
-      ${sizes}
-      <div class="modal-qty">
-        <button class="qty-btn" onclick="changeQuickViewQty(-1)">−</button>
-        <span class="qty-val" id="qvQty">1</span>
-        <button class="qty-btn" onclick="changeQuickViewQty(1)">+</button>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-outline btn-block" onclick="addToCart('${p.id}', quickViewQty); closeQuickView();">Add to Cart</button>
-        <button class="btn btn-primary btn-block" onclick="addToCart('${p.id}', quickViewQty); closeQuickView(); openCartDrawer();">Buy Now</button>
-      </div>
-      <div class="modal-meta">
-        <span>🚚 Free shipping over Rs. 5,000</span>
-        <span>🔁 30-day returns</span>
-      </div>
-    </div>`;
-  document.getElementById("quickViewModal").classList.add("show");
-  if (typeof setWhatsAppProduct === "function") setWhatsAppProduct(p.name);
-}
-function changeQuickViewQty(delta){
-  quickViewQty = Math.max(1, quickViewQty + delta);
-  document.getElementById("qvQty").textContent = quickViewQty;
-}
-function closeQuickView(){
-  document.getElementById("quickViewModal").classList.remove("show");
 }
 
 /* ---------------- Category page filter/sort ---------------- */
@@ -233,17 +189,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartOverlay = document.getElementById("cartOverlay");
   if(cartOverlay) cartOverlay.addEventListener("click", closeCartDrawer);
 
-  const modalClose = document.getElementById("modalClose");
-  if(modalClose) modalClose.addEventListener("click", closeQuickView);
-  const quickViewModal = document.getElementById("quickViewModal");
-  if(quickViewModal){
-    quickViewModal.addEventListener("click", (e) => {
-      if(e.target === quickViewModal) closeQuickView();
-    });
-  }
-
   document.addEventListener("keydown", (e) => {
-    if(e.key === "Escape"){ closeCartDrawer(); closeQuickView(); closeMobileDrawer(); }
+    if(e.key === "Escape"){ closeCartDrawer(); closeMobileDrawer(); }
   });
 
   initAccordion();
