@@ -4,15 +4,33 @@
    Order is saved to Firestore and confirmed over WhatsApp.
    ========================================================================== */
 
-function checkoutShipping(subtotal) {
-  return subtotal >= 5000 ? 0 : 250;
+function checkoutShipping() {
+  return 0;
+}
+
+var CHECKOUT_KEY = "gentify_checkout_pending";
+
+function checkoutLines() {
+  var cart = cartLines();
+  if (cart.length) {
+    localStorage.setItem(CHECKOUT_KEY, JSON.stringify(getCart()));
+    localStorage.removeItem(CART_KEY);
+    updateCartCount();
+    renderCartDrawer();
+    return cart;
+  }
+  var pending = [];
+  try { pending = JSON.parse(localStorage.getItem(CHECKOUT_KEY)) || []; } catch (e) { pending = []; }
+  return pending.map(function (l) {
+    return { id: l.id, qty: l.qty, product: findProduct(l.id) };
+  }).filter(function (l) { return l.product; });
 }
 
 function renderCheckout() {
   var box = document.getElementById("checkoutContent");
   if (!box) return;
 
-  var lines = cartLines();
+  var lines = checkoutLines();
   if (!lines.length) {
     box.innerHTML =
       '<div class="checkout-empty">' +
@@ -112,7 +130,7 @@ function renderCheckout() {
           '<div class="cs-line"><span>Shipping</span><span class="amount">' + (shipping ? formatPKR(shipping) : 'Free') + '</span></div>' +
           '<div class="cs-line grand"><span>Total</span><span>' + formatPKR(total) + '</span></div>' +
         '</div>' +
-        '<p class="cs-note">🚚 Free shipping over Rs. 5,000 · 🔁 30-day returns</p>' +
+        '<p class="cs-note">🚚 Free shipping on all orders · 🔁 30-day returns</p>' +
       '</aside>' +
     '</div>';
 
@@ -157,7 +175,7 @@ function placeOrderNow() {
     showToast("Please complete the highlighted fields");
     return;
   }
-  var lines = cartLines();
+  var lines = checkoutLines();
   if (!lines.length) return;
 
   var name = checkoutField("coName");
@@ -220,6 +238,7 @@ function placeOrderNow() {
   window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg), "_blank");
 
   localStorage.removeItem(CART_KEY);
+  localStorage.removeItem(CHECKOUT_KEY);
   updateCartCount();
   renderCartDrawer();
   closeCartDrawer();

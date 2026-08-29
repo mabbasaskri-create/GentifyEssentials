@@ -50,7 +50,7 @@ function renderProductTabs(p) {
     details.push('<p><strong>Sizes:</strong> ' + p.sizes.join(", ") + '</p>');
   }
   details.push('<p><strong>Price:</strong> ' + formatPKR(p.price) + '</p>');
-  details.push('<p><strong>Shipping:</strong> Free on all orders over Rs. 5,000 across Pakistan.</p>');
+  details.push('<p><strong>Shipping:</strong> Free on all orders across Pakistan.</p>');
   details.push('<p><strong>Returns:</strong> 30-day returns, no questions asked.</p>');
 
   var reviewsHtml =
@@ -174,7 +174,7 @@ function renderProductPage() {
         '<p><strong>SKU:</strong> ' + p.id.toUpperCase() + '</p>' +
         '<p><strong>Category:</strong> ' + catLabel + '</p>' +
         '<p><strong>Availability:</strong> In stock · Ships in 3–5 days</p>' +
-        '<p><strong>Delivery:</strong> Free over Rs. 5,000</p>' +
+        '<p><strong>Delivery:</strong> Free on all orders</p>' +
       '</div>' +
     '</div>';
 
