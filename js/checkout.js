@@ -1,7 +1,7 @@
 /* ==========================================================================
    GENTIFY ESSENTIALS — checkout page
    Billing form + order summary. Payment is Cash on Delivery only.
-   Order is saved to Firestore and confirmed over WhatsApp.
+   Order is saved to Firestore; confirmation follows via phone/WhatsApp.
    ========================================================================== */
 
 function checkoutShipping() {
@@ -219,24 +219,6 @@ function placeOrderNow() {
     });
   }
 
-  var itemsList = lines.map(function (l) {
-    return "• " + l.product.name + " x" + l.qty + " — " + formatPKR(l.product.price * l.qty);
-  }).join("\n");
-
-  var msg =
-    "Hello Gentify Essentials, I'd like to place an order:\n\n" +
-    "👤 Name: " + name + "\n" +
-    "📞 Phone: " + phone + "\n" +
-    (email ? "📧 Email: " + email + "\n" : "") +
-    "📍 Address: " + address + ", " + city + ", " + province + "\n" +
-    "💵 Payment: Cash on Delivery\n" +
-    "\nItems:\n" + itemsList + "\n" +
-    "\n🚚 Shipping: " + (shipping ? formatPKR(shipping) : "Free") + "\n" +
-    "💰 Total: " + formatPKR(total) +
-    (notes ? "\n\n📝 Notes: " + notes : "");
-
-  window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg), "_blank");
-
   localStorage.removeItem(CART_KEY);
   localStorage.removeItem(CHECKOUT_KEY);
   updateCartCount();
@@ -249,7 +231,7 @@ function placeOrderNow() {
       '<div class="order-success">' +
         '<div class="ic">✔</div>' +
         '<h2>Order received — thank you, ' + name.split(" ")[0] + '!</h2>' +
-        '<p>We have sent you a confirmation on WhatsApp and will call to verify your order shortly. Pay in cash when it arrives.</p>' +
+        '<p>Your order has been placed. We\'ll call you on ' + phone + ' to confirm and you can pay in cash when your order arrives.</p>' +
         '<a class="btn btn-primary" href="index.html">Continue Shopping →</a>' +
       '</div>';
   }

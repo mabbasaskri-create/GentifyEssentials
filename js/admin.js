@@ -67,6 +67,8 @@ function renderAdminTable(filter) {
   }
 }
 
+var ORDER_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
+
 function renderAdminOrders(orders) {
   var tbody = document.getElementById("adminOrdersBody");
   var empty = document.getElementById("ordersEmpty");
@@ -74,9 +76,46 @@ function renderAdminOrders(orders) {
   empty.style.display = "none";
   tbody.innerHTML = orders.map(function (o) {
     var items = (o.items || []).map(function (i) { return (i.name || i.id) + " x" + i.qty; }).join(", ");
-    var date = o.createdAt && o.createdAt.seconds ? new Date(o.createdAt.seconds * 1000).toLocaleDateString() : "—";
-    return '<tr><td>' + date + '</td><td>' + items + '</td><td>' + formatPKR(o.total || 0) + '</td><td><span class="admin-badge">' + (o.status || "pending") + '</span></td></tr>';
+    var date = o.createdAt && o.createdAt.seconds ? new Date(o.createdAt.seconds * 1000).toLocaleDateString() : (o.createdAt && o.createdAt.toDate ? o.createdAt.toDate().toLocaleDateString() : "—");
+    var customer = '<strong>' + (o.userName || "—") + '</strong>' + (o.userPhone ? '<br><span style="font-size:12px;color:#7c8797;">' + o.userPhone + '</span>' : "");
+    var st = o.status || "pending";
+    var opts = ORDER_STATUSES.map(function (s) {
+      return '<option value="' + s + '"' + (s === st ? " selected" : "") + '>' + s.charAt(0).toUpperCase() + s.slice(1) + '</option>';
+    }).join("");
+    return '<tr><td>' + date + '</td><td>' + customer + '</td><td>' + items + '</td><td>' + formatPKR(o.total || 0) + '</td><td><select class="admin-order-status" data-id="' + o.id + '" onchange="updateOrderStatus(this)">' + opts + '</select></td><td><button class="admin-action-btn admin-action-delete" onclick="deleteOrder(\'' + o.id + '\')">Delete</button></td></tr>';
   }).join("");
+}
+
+function refreshAdminOrders() {
+  fsLoadOrders(function (orders) {
+    renderAdminOrders(orders);
+    renderAdminStats(allProducts || [], orders);
+  });
+}
+
+function updateOrderStatus(sel) {
+  var id = sel.getAttribute("data-id");
+  var val = sel.value;
+  if (typeof fsUpdateOrder !== "function") return;
+  showToast("Updating status...");
+  fsUpdateOrder(id, { status: val }).then(function () {
+    showToast("Status updated to " + val.charAt(0).toUpperCase() + val.slice(1));
+  }).catch(function (e) {
+    console.error(e);
+    showToast("Error: " + e.message);
+    refreshAdminOrders();
+  });
+}
+
+function deleteOrder(id) {
+  if (!confirm("Delete this order forever? This cannot be undone.")) return;
+  if (typeof fsDeleteOrder !== "function") return;
+  fsDeleteOrder(id).then(function () {
+    showToast("Order deleted");
+    refreshAdminOrders();
+  }).catch(function (e) {
+    showToast("Error: " + e.message);
+  });
 }
 
 function resetImageSlots() {

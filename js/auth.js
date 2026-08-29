@@ -291,6 +291,14 @@ function fsSaveOrder(order) {
   return db.collection("orders").add(order);
 }
 
+function fsUpdateOrder(id, data) {
+  return db.collection("orders").doc(id).update(data);
+}
+
+function fsDeleteOrder(id) {
+  return db.collection("orders").doc(id).delete();
+}
+
 function fsLoadOrders(callback) {
   db.collection("orders").orderBy("createdAt", "desc").get().then(function (snap) {
     var list = [];
