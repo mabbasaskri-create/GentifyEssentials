@@ -314,7 +314,6 @@ function loadCollections() {
     caps:     "https://placehold.co/500x650/0B1F3A/D8BD84?font=playfair-display&text=Caps",
     watches:  "https://placehold.co/500x650/232323/F6F2E9?font=playfair-display&text=Watches",
     perfumes: "https://placehold.co/500x650/16294A/B8923F?font=playfair-display&text=Perfumes",
-    tshirts:  "https://placehold.co/500x650/2B2B2B/F6F2E9?font=playfair-display&text=T-Shirts",
     wallets:  "https://placehold.co/500x650/1A1A1A/D8BD84?font=playfair-display&text=Wallets"
   };
   fsLoadCollections(function (cols) {

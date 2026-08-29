@@ -227,7 +227,7 @@ function prefetchProductImages(products, limit) {
 window.prefetchProductImages = prefetchProductImages;
 
 function applyCollectionImages(cols) {
-  var ids = ["caps", "watches", "perfumes", "tshirts", "wallets"];
+  var ids = ["caps", "watches", "perfumes", "wallets"];
   var map = {};
   cols.forEach(function (c) { map[c.id] = c.image; });
   var urls = [];
@@ -258,7 +258,7 @@ function applyCategoryHeroFromCollections(cols) {
 }
 
 function applyCollectionCountsFromProducts(products) {
-  var ids = ["caps", "watches", "perfumes", "tshirts", "wallets"];
+  var ids = ["caps", "watches", "perfumes", "wallets"];
   var counts = {};
   products.forEach(function (p) {
     if (p.category) counts[p.category] = (counts[p.category] || 0) + 1;

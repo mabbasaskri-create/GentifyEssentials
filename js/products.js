@@ -74,30 +74,6 @@ const PRODUCTS = [
     image:"https://placehold.co/600x600/241830/F6F2E9?font=playfair-display&text=Midnight%0ASpice",
     desc:"Cardamom and black pepper over a smoldering base of oud and dark chocolate — built for cold nights. 100ml EDP." },
 
-  // ---------------- T-SHIRTS ----------------
-  { id:"tee-01", category:"tshirts", name:"Signature Crest Tee", price:2800, badge:"Bestseller", rating:4.8, reviews:57,
-    image:"https://placehold.co/600x600/0B1F3A/F6F2E9?font=playfair-display&text=Crest%0ATee",
-    desc:"A heavyweight 240gsm cotton tee with a tonal embroidered crest at the chest. Garment-dyed for a soft, broken-in hand feel.", tags:["Bestseller"],
-    sizes:["S","M","L","XL","XXL"] },
-  { id:"tee-02", category:"tshirts", name:"Ivory Essential Tee", price:2400, rating:4.7, reviews:44,
-    image:"https://placehold.co/600x600/EFE8D8/0B1F3A?font=playfair-display&text=Essential%0ATee",
-    desc:"Our everyday tee — a boxy, relaxed cut in combed cotton jersey with a reinforced rib collar that holds its shape.", sizes:["S","M","L","XL"] },
-  { id:"tee-03", category:"tshirts", name:"Charcoal Pocket Tee", price:2600, rating:4.6, reviews:21,
-    image:"https://placehold.co/600x600/2B2B2B/F6F2E9?font=playfair-display&text=Pocket%0ATee",
-    desc:"A classic pocket tee in heather charcoal, cut from mid-weight cotton with a slightly dropped shoulder.", sizes:["S","M","L","XL","XXL"] },
-  { id:"tee-04", category:"tshirts", name:"Olive Henley", price:3100, badge:"New", rating:4.8, reviews:12,
-    image:"https://placehold.co/600x600/4A5A3A/F6F2E9?font=playfair-display&text=Olive%0AHenley",
-    desc:"A three-button henley in brushed cotton with a slightly ribbed placket — layers cleanly under an overshirt.", sizes:["S","M","L","XL"] },
-  { id:"tee-05", category:"tshirts", name:"Gold Line Tee", price:2900, rating:4.7, reviews:19,
-    image:"https://placehold.co/600x600/16294A/B8923F?font=playfair-display&text=Gold+Line%0ATee",
-    desc:"A minimal tee finished with a single fine gold hairline at the hem — quietly detailed, endlessly wearable.", sizes:["S","M","L","XL","XXL"] },
-  { id:"tee-06", category:"tshirts", name:"Navy Stripe Tee", price:2700, rating:4.5, reviews:15,
-    image:"https://placehold.co/600x600/13324A/F6F2E9?font=playfair-display&text=Stripe%0ATee",
-    desc:"A Breton-inspired striped tee in navy and ivory, woven from a durable cotton blend that holds its colour wash after wash.", sizes:["S","M","L","XL"] },
-  { id:"tee-07", category:"tshirts", name:"Burgundy Crew Tee", price:2500, rating:4.6, reviews:17,
-    image:"https://placehold.co/600x600/5A2430/F6F2E9?font=playfair-display&text=Crew%0ATee",
-    desc:"A rich burgundy crew tee in soft-washed cotton, cut with a clean crew neck and straight hem.", sizes:["S","M","L","XL","XXL"] },
-
   // ---------------- WALLETS ----------------
   { id:"wal-01", category:"wallets", name:"Bifold Leather Wallet", price:4200, badge:"Bestseller", rating:4.9, reviews:66,
     image:"https://placehold.co/600x600/2B2B2B/D8BD84?font=playfair-display&text=Bifold%0AWallet",
@@ -126,7 +102,6 @@ const CATEGORY_META = {
   caps:     { label:"Caps",     tagline:"Structured and unstructured caps in premium cottons and wools." },
   watches:  { label:"Watches",  tagline:"Automatic, chronograph and quartz timepieces for every occasion." },
   perfumes: { label:"Perfumes", tagline:"Layered, long-lasting fragrances in 100ml Eau de Parfum and Eau de Toilette." },
-  tshirts:  { label:"T-Shirts", tagline:"Heavyweight cotton tees and henleys, cut for a clean, modern fit." },
   wallets:  { label:"Wallets",  tagline:"Full-grain and vegetable-tanned leather goods, built to age well." },
 };
 
