@@ -255,4 +255,26 @@ function placeOrderNow() {
   }
 }
 
-renderCheckout();
+function refreshCheckoutUI() {
+  renderCheckout();
+  renderCartDrawer();
+}
+
+refreshCheckoutUI();
+
+if (typeof fsLoadProducts === "function") {
+  fsLoadProducts(
+    function (list) {
+      if (list && list.length) {
+        if (typeof mergeProductCatalog === "function") mergeProductCatalog(list);
+        refreshCheckoutUI();
+      }
+    },
+    function (list) {
+      if (list && list.length) {
+        if (typeof mergeProductCatalog === "function") mergeProductCatalog(list);
+        refreshCheckoutUI();
+      }
+    }
+  );
+}
