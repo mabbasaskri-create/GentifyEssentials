@@ -27,8 +27,8 @@ function productCard(p){
         ${oldPrice}
       </div>
       <div class="card-actions">
-        <a class="btn btn-primary" href="${url}">Buy Now</a>
-        <button class="btn btn-outline" onclick="addToCart('${p.id}', 1)">Add to Cart</button>
+        <button class="btn btn-primary" type="button" onclick="buyNow('${p.id}')">Buy Now</button>
+        <button class="btn btn-outline" type="button" onclick="addToCart('${p.id}', 1)">Add to Cart</button>
       </div>
     </div>
   </article>`;

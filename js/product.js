@@ -168,7 +168,7 @@ function renderProductPage() {
           '<button type="button" onclick="changeProductQty(1)" aria-label="Increase quantity">+</button>' +
         '</div>' +
         '<button class="btn btn-outline" type="button" onclick="addToCart(\'' + p.id + '\', productPageQty)">Add to Cart</button>' +
-        '<button class="btn btn-primary" type="button" onclick="addToCart(\'' + p.id + '\', productPageQty); openCartDrawer();">Buy Now</button>' +
+        '<button class="btn btn-primary" type="button" onclick="buyNow(\'' + p.id + '\', productPageQty)">Buy Now</button>' +
       '</div>' +
       '<div class="pd-meta">' +
         '<p><strong>SKU:</strong> ' + p.id.toUpperCase() + '</p>' +

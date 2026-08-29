@@ -29,6 +29,10 @@ function addToCart(id, qty){
   showToast(p ? p.name + " added to cart" : "Added to cart");
   if (p && typeof setWhatsAppProduct === "function") setWhatsAppProduct(p.name);
 }
+function buyNow(id, qty){
+  addToCart(id, qty);
+  window.location.href = "checkout.html";
+}
 function removeFromCart(id){
   saveCart(getCart().filter(function(l){ return l.id !== id; }));
   renderCartDrawer();
