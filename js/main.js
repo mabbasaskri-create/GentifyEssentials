@@ -200,6 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadCollectionImages();
     loadHeroImage();
     loadCategoryHero();
+    if (typeof pageLoaderReady === "function") pageLoaderReady();
   }
 });
 
@@ -292,6 +293,7 @@ function applySiteBundle(bundle) {
   }
   applyCollectionCountsFromProducts(bundle.products || PRODUCTS);
   prefetchProductImages(bundle.products || PRODUCTS);
+  if (typeof pageLoaderReady === "function") pageLoaderReady();
 }
 
 function loadCategoryHero() {
