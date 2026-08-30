@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Panel — Gentify Essentials</title>
+<meta name="description" content="Gentify Essentials admin panel — manage products, orders, collections and site settings.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -16,23 +17,35 @@
 <div class="page-loader" id="pageLoader">
   <div class="page-loader-inner">
     <div class="page-loader-logo">GENTIFY<span class="dot">.</span></div>
+    <div class="page-loader-rule"></div>
     <div class="page-loader-sub">ESSENTIALS</div>
     <div class="page-loader-bar"><span></span></div>
   </div>
 </div>
 
-
-<div class="announce">Admin Panel — Gentify Essentials</div>
+<div class="announce">Free shipping on all orders — across Pakistan</div>
 
 <header class="site-header">
   <div class="wrap nav-row">
     <a href="index.html" class="logo">GENTIFY<span class="dot">.</span></a>
     <nav class="nav-links" id="navLinks">
-      <a href="index.html">Back to Store</a>
+      <a href="index.html">Home</a>
+      <a href="caps.html">Caps</a>
+      <a href="watches.html">Watches</a>
+      <a href="perfumes.html">Perfumes</a>
+      <a href="wallets.html">Wallets</a>
+      <a href="about.html">About</a>
+      <a href="returns.html">Returns</a>
     </nav>
     <div class="nav-actions">
       <div class="google-auth" id="googleAuth">
-        <div class="google-auth-signedin" id="googleUserInfo" style="display:flex;">
+        <div class="google-auth-signedout" id="googleSignInBtn">
+          <button class="google-signin-btn" type="button">
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path></svg>
+            Sign in
+          </button>
+        </div>
+        <div class="google-auth-signedin" id="googleUserInfo" style="display:none;">
           <div class="google-user-menu">
             <button class="google-user-avatar" id="googleAvatarBtn" type="button">
               <span class="google-user-letter" id="googleUserLetter"></span>
@@ -40,61 +53,53 @@
             <div class="google-user-dropdown" id="googleUserDropdown">
               <div class="google-dropdown-name" id="googleDropdownName"></div>
               <button class="google-dropdown-signout" id="googleSignOutBtn" type="button">Sign out</button>
+              <button class="google-dropdown-admin" id="googleAdminLink" type="button">★ Admin Panel</button>
             </div>
           </div>
         </div>
       </div>
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+        <span class="cart-count">0</span>
+      </button>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
 
-<section class="admin-guard" id="adminGuard">
+<section class="admin-section">
   <div class="wrap">
-    <div class="admin-access-denied">
+
+    <div id="adminGuard" class="admin-access-denied">
       <div class="admin-denied-icon">🔒</div>
-      <h2>Access Denied</h2>
-      <p>Only the store owner can access this panel.</p>
-      <a href="index.html" class="btn btn-primary" style="margin-top:20px;">Back to Store</a>
+      <h2 class="admin-title">Admins Only</h2>
+      <p class="admin-email" id="adminLoginHint">Sign in with your authorized Google account to manage the store.</p>
     </div>
-  </div>
-</section>
 
-<section class="admin-panel" id="adminPanel" style="display:none;">
-  <div class="wrap">
+    <div id="adminPanel" style="display:none;">
 
-    <div class="admin-top">
-      <div>
-        <h1 class="admin-title">Dashboard</h1>
+      <div class="admin-top">
+        <div>
+          <h2 class="admin-title">Admin Panel</h2>
+          <p class="admin-email" id="adminEmail"></p>
+        </div>
         <button class="admin-sync-btn" id="syncFirebaseBtn" type="button">⟳ SYNC TO FIREBASE</button>
       </div>
-      <span class="admin-email" id="adminEmail"></span>
-    </div>
 
-    <div class="admin-stats">
-      <div class="admin-stat-card">
-        <div class="admin-stat-num" id="statProducts">0</div>
-        <div class="admin-stat-label">Total Products</div>
+      <div class="admin-stats">
+        <div class="admin-stat-card"><span class="admin-stat-num" id="statProducts">0</span><span class="admin-stat-label">Products</span></div>
+        <div class="admin-stat-card"><span class="admin-stat-num" id="statCategories">0</span><span class="admin-stat-label">Categories</span></div>
+        <div class="admin-stat-card"><span class="admin-stat-num" id="statValue">Rs. 0</span><span class="admin-stat-label">Inventory Value</span></div>
+        <div class="admin-stat-card"><span class="admin-stat-num" id="statOrders">0</span><span class="admin-stat-label">Orders</span></div>
       </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-num" id="statCategories">0</div>
-        <div class="admin-stat-label">Categories</div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-num" id="statValue">Rs. 0</div>
-        <div class="admin-stat-label">Total Inventory Value</div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-num" id="statOrders">0</div>
-        <div class="admin-stat-label">Cart Orders</div>
-      </div>
-    </div>
 
-    <div class="admin-section">
       <div class="admin-section-head">
-        <h2>Products</h2>
-        <button class="btn btn-gold btn-sm" id="addProductBtn">+ Add Product</button>
+        <div>
+          <h3>Products</h3>
+          <p>Manage your catalog — prices, badges, ratings and images.</p>
+        </div>
+        <button class="btn btn-primary" id="addProductBtn" type="button">+ Add Product</button>
       </div>
-
       <div class="admin-filters">
         <select class="sort-select" id="adminCategoryFilter">
           <option value="all">All Categories</option>
@@ -104,227 +109,194 @@
           <option value="wallets">Wallets</option>
         </select>
       </div>
-
       <div class="admin-table-wrap">
-        <table class="admin-table" id="adminProductTable">
+        <table class="admin-table">
           <thead>
-            <tr>
-              <th>Image</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Old Price</th>
-              <th>Badge</th>
-              <th>Rating</th>
-              <th>Actions</th>
-            </tr>
+            <tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Old Price</th><th>Badge</th><th>Rating</th><th>Actions</th></tr>
           </thead>
           <tbody id="adminProductBody"></tbody>
         </table>
       </div>
-    </div>
 
-    <div class="admin-section">
-      <div class="admin-section-head">
-        <h2>Hero Banner — Homepage</h2>
+      <div class="admin-section-head" style="margin-top:36px;">
+        <h3>Orders</h3>
+        <span style="font-size:13px;color:#7c8797;">Live from Firestore — update status or delete as needed.</span>
       </div>
-      <p style="color:#7c8797;margin-bottom:20px;">Change the background image of the homepage hero section.</p>
-      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap;">
-        <div id="heroPreview" style="width:300px;aspect-ratio:16/7;background:var(--navy);border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);">
-          <span style="color:var(--gold-soft);font-size:14px;">No image set</span>
-        </div>
-        <div style="flex:1;min-width:200px;">
-          <label class="btn btn-outline btn-sm" style="cursor:pointer;">
-            📁 Choose Hero Image
-            <input type="file" accept="image/*" id="heroImageFile" style="display:none;">
-          </label>
-          <div id="heroSaveStatus" style="margin-top:10px;font-size:13px;color:#7c8797;"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="admin-section">
-      <div class="admin-section-head">
-        <h2>Shop by Collection — Homepage Images</h2>
-      </div>
-      <p style="color:#7c8797;margin-bottom:20px;">Change the images shown on the homepage "Shop by Collection" section.</p>
-      <div class="admin-collections-grid" id="adminCollectionsGrid">
-        <div class="admin-collection-card" data-cat="caps">
-          <div class="admin-collection-img" id="colImgCaps">
-            <span>Caps</span>
-          </div>
-          <div class="admin-collection-info">
-            <strong>Caps</strong>
-            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
-              📁 Change Image
-              <input type="file" accept="image/*" data-col="caps" class="col-file-input" style="display:none;">
-            </label>
-          </div>
-        </div>
-        <div class="admin-collection-card" data-cat="watches">
-          <div class="admin-collection-img" id="colImgWatches">
-            <span>Watches</span>
-          </div>
-          <div class="admin-collection-info">
-            <strong>Watches</strong>
-            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
-              📁 Change Image
-              <input type="file" accept="image/*" data-col="watches" class="col-file-input" style="display:none;">
-            </label>
-          </div>
-        </div>
-        <div class="admin-collection-card" data-cat="perfumes">
-          <div class="admin-collection-img" id="colImgPerfumes">
-            <span>Perfumes</span>
-          </div>
-          <div class="admin-collection-info">
-            <strong>Perfumes</strong>
-            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
-              📁 Change Image
-              <input type="file" accept="image/*" data-col="perfumes" class="col-file-input" style="display:none;">
-            </label>
-          </div>
-        </div>
-        <div class="admin-collection-card" data-cat="wallets">
-          <div class="admin-collection-img" id="colImgWallets">
-            <span>Wallets</span>
-          </div>
-          <div class="admin-collection-info">
-            <strong>Wallets</strong>
-            <label class="btn btn-outline btn-sm" style="margin-top:8px;">
-              📁 Change Image
-              <input type="file" accept="image/*" data-col="wallets" class="col-file-input" style="display:none;">
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="admin-section">
+      <div class="admin-empty" id="ordersEmpty" style="display:none;">No orders yet.</div>
       <div class="admin-table-wrap">
-        <table class="admin-table" id="adminOrdersTable">
+        <table class="admin-table">
           <thead>
-            <tr>
-              <th>Date</th>
-              <th>Customer</th>
-              <th>Items</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
+            <tr><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr>
           </thead>
           <tbody id="adminOrdersBody"></tbody>
         </table>
-        <div class="admin-empty" id="ordersEmpty">No orders yet.</div>
       </div>
-    </div>
 
+      <div class="admin-section-head" style="margin-top:36px;">
+        <h3>Collection Images</h3>
+        <span style="font-size:13px;color:#7c8797;">Click a tile to upload that collection's homepage image.</span>
+      </div>
+      <div class="admin-collections-grid">
+        <div class="admin-collection-card">
+          <div class="admin-collection-img" id="colImgCaps"></div>
+          <div class="admin-collection-info"><strong>Caps</strong><label class="admin-badge">Upload <input type="file" class="col-file-input" data-col="caps" accept="image/*" hidden></label></div>
+        </div>
+        <div class="admin-collection-card">
+          <div class="admin-collection-img" id="colImgWatches"></div>
+          <div class="admin-collection-info"><strong>Watches</strong><label class="admin-badge">Upload <input type="file" class="col-file-input" data-col="watches" accept="image/*" hidden></label></div>
+        </div>
+        <div class="admin-collection-card">
+          <div class="admin-collection-img" id="colImgPerfumes"></div>
+          <div class="admin-collection-info"><strong>Perfumes</strong><label class="admin-badge">Upload <input type="file" class="col-file-input" data-col="perfumes" accept="image/*" hidden></label></div>
+        </div>
+        <div class="admin-collection-card">
+          <div class="admin-collection-img" id="colImgWallets"></div>
+          <div class="admin-collection-info"><strong>Wallets</strong><label class="admin-badge">Upload <input type="file" class="col-file-input" data-col="wallets" accept="image/*" hidden></label></div>
+        </div>
+      </div>
+
+      <div class="admin-section-head" style="margin-top:36px;">
+        <h3>Homepage Hero</h3>
+        <span style="font-size:13px;color:#7c8797;">Optional background image for the homepage hero.</span>
+      </div>
+      <div style="display:flex; gap:18px; align-items:flex-start; flex-wrap:wrap;">
+        <label class="admin-badge" style="padding:12px 18px;">Choose image <input type="file" id="heroImageFile" accept="image/*" hidden></label>
+        <div style="flex:1; min-width:220px;">
+          <div class="admin-collection-img" id="heroPreview" style="height:160px;"></div>
+          <p class="admin-email" id="heroSaveStatus" style="margin-top:8px;"></p>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
-<!-- Add/Edit Product Modal -->
+<!-- Product Modal -->
 <div class="modal" id="productModal">
-  <div class="modal-card" style="max-width:600px;">
-    <button class="modal-close" id="productModalClose">&times;</button>
-    <div class="modal-info" style="padding:36px;">
-      <h2 id="productModalTitle">Add Product</h2>
-      <form id="productForm" style="display:flex;flex-direction:column;gap:16px;margin-top:20px;">
-        <input type="hidden" id="pfId">
-        <div class="pf-row">
-          <label>Name</label>
-          <input type="text" id="pfName" required>
-        </div>
-        <div class="pf-row">
-          <label>Category</label>
-          <select id="pfCategory" required>
+  <div class="modal-card">
+    <button class="modal-close" id="productModalClose" type="button" aria-label="Close">×</button>
+    <h3 id="productModalTitle">Add Product</h3>
+    <form id="productForm" novalidate>
+      <div class="pf-row"><label for="pfName">Name <span class="req">*</span></label><input type="text" id="pfName" required></div>
+      <div class="pf-row-split">
+        <div class="pf-row"><label for="pfCategory">Category</label>
+          <select id="pfCategory">
             <option value="caps">Caps</option>
             <option value="watches">Watches</option>
             <option value="perfumes">Perfumes</option>
             <option value="wallets">Wallets</option>
           </select>
         </div>
-        <div class="pf-row pf-row-split">
-          <div>
-            <label>Price (PKR)</label>
-            <input type="number" id="pfPrice" required min="0">
-          </div>
-          <div>
-            <label>Old Price (PKR)</label>
-            <input type="number" id="pfOldPrice" min="0">
-          </div>
+        <div class="pf-row"><label for="pfBadge">Badge</label>
+          <select id="pfBadge">
+            <option value="">None</option>
+            <option value="Bestseller">Bestseller</option>
+            <option value="New">New</option>
+            <option value="Sale">Sale</option>
+          </select>
         </div>
-        <div class="pf-row pf-row-split">
-          <div>
-            <label>Badge</label>
-            <select id="pfBadge">
-              <option value="">None</option>
-              <option value="Sale">Sale</option>
-              <option value="New">New</option>
-              <option value="Bestseller">Bestseller</option>
-            </select>
-          </div>
-          <div>
-            <label>Rating</label>
-            <input type="number" id="pfRating" min="1" max="5" step="0.1" value="4.5">
-          </div>
+      </div>
+      <div class="pf-row-split">
+        <div class="pf-row"><label for="pfPrice">Price (Rs.) *</label><input type="number" id="pfPrice" min="0" required></div>
+        <div class="pf-row"><label for="pfOldPrice">Old Price (Rs.)</label><input type="number" id="pfOldPrice" min="0"></div>
+        <div class="pf-row"><label for="pfRating">Rating</label><input type="number" id="pfRating" min="0" max="5" step="0.1"></div>
+      </div>
+      <div class="pf-row"><label for="pfDesc">Description</label><textarea id="pfDesc" rows="3"></textarea></div>
+      <div class="pf-row"><label for="pfTags">Tags (comma separated)</label><input type="text" id="pfTags" placeholder="Bestseller, Premium Cotton"></div>
+      <div class="pf-row"><label>Images <span class="req">*</span></label></div>
+      <div class="pf-images-grid">
+        <div class="pf-image-slot" id="pfSlot0">
+          <div class="pf-image-preview pf-image-upload" id="pfImagePreview0"><span>1</span></div>
+          <div class="pf-image-actions"><button type="button" class="pf-img-remove" data-slot="0" >Remove</button></div>
         </div>
-        <div class="pf-row">
-          <label>Product Images (max 4)</label>
-          <div class="pf-images-grid" id="pfImagesGrid">
-            <div class="pf-image-slot" id="pfSlot0">
-              <div class="pf-image-preview" id="pfImagePreview0"><span>1</span></div>
-              <button class="pf-img-remove" data-slot="0" type="button">&times;</button>
-            </div>
-            <div class="pf-image-slot" id="pfSlot1">
-              <div class="pf-image-preview" id="pfImagePreview1"><span>2</span></div>
-              <button class="pf-img-remove" data-slot="1" type="button">&times;</button>
-            </div>
-            <div class="pf-image-slot" id="pfSlot2">
-              <div class="pf-image-preview" id="pfImagePreview2"><span>3</span></div>
-              <button class="pf-img-remove" data-slot="2" type="button">&times;</button>
-            </div>
-            <div class="pf-image-slot" id="pfSlot3">
-              <div class="pf-image-preview" id="pfImagePreview3"><span>4</span></div>
-              <button class="pf-img-remove" data-slot="3" type="button">&times;</button>
-            </div>
-          </div>
-          <div class="pf-image-actions">
-            <label class="btn btn-outline btn-sm pf-img-btn">
-              📁 Choose from Device
-              <input type="file" id="pfImageFile" accept="image/*" style="display:none;">
-            </label>
-            <span class="pf-img-or">OR</span>
-            <input type="url" id="pfImageUrl" placeholder="Paste image URL here" class="pf-img-url">
-            <button class="btn btn-gold btn-sm" id="pfAddUrlBtn" type="button">Add URL</button>
-          </div>
+        <div class="pf-image-slot" id="pfSlot1">
+          <div class="pf-image-preview pf-image-upload" id="pfImagePreview1"><span>2</span></div>
+          <div class="pf-image-actions"><button type="button" class="pf-img-remove" data-slot="1">Remove</button></div>
         </div>
-        <div class="pf-row">
-          <label>Description</label>
-          <textarea id="pfDesc" rows="3"></textarea>
+        <div class="pf-image-slot" id="pfSlot2">
+          <div class="pf-image-preview pf-image-upload" id="pfImagePreview2"><span>3</span></div>
+          <div class="pf-image-actions"><button type="button" class="pf-img-remove" data-slot="2">Remove</button></div>
         </div>
-        <div class="pf-row">
-          <label>Tags (comma separated)</label>
-          <input type="text" id="pfTags" placeholder="Bestseller, Sale">
+        <div class="pf-image-slot" id="pfSlot3">
+          <div class="pf-image-preview pf-image-upload" id="pfImagePreview3"><span>4</span></div>
+          <div class="pf-image-actions"><button type="button" class="pf-img-remove" data-slot="3">Remove</button></div>
         </div>
-        <div class="pf-actions">
-          <button type="button" class="btn btn-outline btn-sm" id="productFormCancel">Cancel</button>
-          <button type="submit" class="btn btn-gold btn-sm">Save Product</button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div class="pf-row"><label for="pfImageFile" class="admin-badge" style="display:inline-block;">Upload image<input type="file" id="pfImageFile" accept="image/*" hidden></label></div>
+      <div class="pf-img-url"><input type="text" id="pfImageUrl" placeholder="…or paste an image URL"><button type="button" id="pfAddUrlBtn" class="btn btn-outline">Add</button></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" id="productFormCancel">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Product</button>
+      </div>
+    </form>
   </div>
 </div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">GENTIFY<span class="dot">.</span></div>
+        <p class="footer-about">Premium caps, watches, perfumes and leather wallets for the modern gentleman. Handpicked quality, shipped across Pakistan.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="caps.html">Caps</a></li>
+          <li><a href="watches.html">Watches</a></li>
+          <li><a href="perfumes.html">Perfumes</a></li>
+          <li><a href="wallets.html">Wallets</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="returns.html">Returns</a></li>
+          <li><a href="https://wa.me/923256646684" target="_blank">Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <ul>
+          <li><a href="returns.html">Shipping Info</a></li>
+          <li><a href="returns.html">Returns Policy</a></li>
+          <li><a href="returns.html">Size Guide</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Gentify Essentials. All rights reserved.</span>
+      <span><a href="#">Privacy</a> · <a href="#">Terms</a> · <a href="#">Accessibility</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- Cart Drawer -->
+<div class="overlay" id="cartOverlay"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="drawer-close" id="drawerClose">×</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
 
 <div class="toast" id="toast"></div>
 
 <script src="js/preloader.js"></script>
 <script src="js/products.js"></script>
-<script src="js/admin.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/admin-auth.js"></script>
+<script src="js/admin.js"></script>
 <script src="js/whatsapp.js"></script>
+
+<a id="whatsappFloat" class="whatsapp-float" href="https://wa.me/923256646684?text=I%20want%20to%20order%20this%20product." target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp"><span class="whatsapp-float-glow" aria-hidden="true"></span><span class="whatsapp-float-ring" aria-hidden="true"></span><svg class="whatsapp-float-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg></a>
 </body>
 </html>
